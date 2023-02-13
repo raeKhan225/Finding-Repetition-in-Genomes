@@ -1,16 +1,20 @@
-# This is a sample Python script.
+def read_fasta_file(file):
+    fasta_dict = {}
+    fasta_file_lines = open(file, "r").readlines()
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+    # Tries to read FASTA file
+    try:
+        # Add FASTA file to dict
+        for line in fasta_file_lines:
+            if line.startswith(">"):
+                seq = ""
+                key = line[1:].strip()
+            else:
+                seq += line.strip()
 
+            # replacing old seq with updated
+            fasta_dict[key] = seq
+        return fasta_dict
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print("Test")  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    except Exception as e:
+        print("Error when reading FASTA file : " + e)
