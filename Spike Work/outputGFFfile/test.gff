@@ -1,0 +1,15 @@
+##gff-version 3
+##Microsatellite finder 2023 version 1
+##Author: Raeesah Khan
+chr1	example	gene	1000	2000	.	+	.	ID=gene1;Name=exampleGene1;Note=This is an example gene.
+chr1	example	mRNA	1200	1800	.	+	.	ID=gene2;Name=exampleGene2;Note=This is an example gene.
+chr1	example	exon	1200	1300	.	+	.	ID=gene3;Name=exampleGene3;Note=This is an example gene.
+chr1	example	exon	1700	1800	.	+	.	ID=gene4;Name=exampleGene4;Note=This is an example gene.
+chr1	example	gene	1000	2000	.	+	.	ID=gene1;Name=exampleGene1;Note=This is an example gene.
+chr1	example	mRNA	1200	1800	.	+	.	ID=gene2;Name=exampleGene2;Note=This is an example gene.
+chr1	example	exon	1200	1300	.	+	.	ID=gene3;Name=exampleGene3;Note=This is an example gene.
+chr1	example	exon	1700	1800	.	+	.	ID=gene4;Name=exampleGene4;Note=This is an example gene.
+chr1	example	gene	1000	2000	.	+	.	ID=gene1;Name=exampleGene1;Note=This is an example gene.
+chr1	example	mRNA	1200	1800	.	+	.	ID=gene2;Name=exampleGene2;Note=This is an example gene.
+chr1	example	exon	1200	1300	.	+	.	ID=gene3;Name=exampleGene3;Note=This is an example gene.
+chr1	example	exon	1700	1800	.	+	.	ID=gene4;Name=exampleGene4;Note=This is an example gene.
