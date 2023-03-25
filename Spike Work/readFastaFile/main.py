@@ -18,3 +18,5 @@ def read_fasta_file(file):
 
     except Exception as e:
         print("Error when reading FASTA file : " + e)
+
+read_fasta_file("/Users/raeesahkhan/Documents/uni/Major_Project/Tests/01_test.fa")
