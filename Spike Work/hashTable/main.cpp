@@ -9,7 +9,6 @@ class HashTable{
 public:
     // tuple value : count of number of microsat, start poition o full genome, end position of full genome, penalty score
     unordered_map<string, vector<int>> hashtable;
-
     void findSubMicrosat(const int minLen, const int maxLen, const string& genomeString){
         // Goes through each char in the string
         for(int startpos = 0; startpos < genomeString.length(); startpos ++) {
@@ -23,36 +22,30 @@ public:
         }
     }
 
-    void getRidOfLowNoMicrosat(){
 
-
-    }
-
-    unordered_map<string, vector<int>> checkIfNextToeachOther(){
+    unordered_map<string, vector<int>> checkIfNextToeachOther( int minLen){
         vector<int> trueOrFalse;
         unordered_map<string, vector<int>> mapOfFoundMicrosats;
         for (auto & [key, vec] : hashtable) { // for each vector in hastable
-
-            if(vec[0] < 2){ // check if there is multiple sub micosats fo this sub microsats - cange 2 to min microsat len
+            if(vec[0] <minLen){ // check if there is multiple sub micosats fo this sub microsats - cange 2 to min microsat len
                 continue;
             }
 
             // checks if they are next to each other
-            int startpos = vec[1]; // save the startPos of the potential microsat
-            for (int i = 2; i + 4 < vec.size(); i += 3 ) { // starts at 2 to skip count and first start pos
 
-                if (vec[i] + 1 == vec [i + 2] ){//checks if startpos
-                    if ( i + 5  == vec.size()){ // checks if reached end of vector
-                        //cout << "Here";
-                        int endPos = vec[i + 3];
-                        mapOfFoundMicrosats[key] = {startpos, endPos};
-                        trueOrFalse.push_back(1);
-                        break;
-                    }
+             // save the startPos of the potential microsat
+            for (int i = 2; i + 4 < vec.size(); i ++ ) {// starts at 2 to skip count and first start pos
+                int startpos = vec[i];
+                int endPos = -1;
+                while (vec[i] + 1 == vec [i + 2] ){//checks if startpos // need to make it so it doesn't only stop at the end of submicrosat
+                    endPos = vec[i + 3];
+                    i += 3;
                 }
-                else{
-                    trueOrFalse.push_back(0);
-                    break; // break if one is not next to each other
+                vector<int> oldVal = mapOfFoundMicrosats[key];
+                oldVal.push_back(startpos);
+                oldVal.push_back(endPos);
+                if ( i + 5  == vec.size()){ // checks if reached end of vector
+                    break;
                 }
             }
         }
@@ -86,7 +79,6 @@ public:
 
             // Assigning new values to key
             hashtable[microSat] = initialVector;
-
         }
     }
 
@@ -101,21 +93,43 @@ public:
             cout << "\n" ;
         }
     }
+    void test(){
+        string dna = "ATGAGATCCACAGGAGTTGAGCTGACTGAGCTGAGCTGAGCTGAGCTGAGCAGCTACGAGCTGAGCTGAGCTGAGCTGAGCTGAGCTGAGC";
+        int minRepeatLength = 2;
+        int maxRepeatLength = 6;
 
+        vector<string> microsatellites;
+        vector<pair<int, int>> positions;
+        for(int i = 0; i < dna.length(); i++) {
+            for(int j = i+minRepeatLength; j <= i+maxRepeatLength && j <= dna.length(); j++) {
+                string substring = dna.substr(i, j-i);
+                int repeatCount = (j-i) / substring.length();
+                string repeatedSubstring = string(repeatCount, substring[0]);
+                if(substring == repeatedSubstring) {
+                    microsatellites.push_back(substring);
+                    positions.emplace_back(i, j-1);
+                }
+            }
+        }
+        cout << microsatellites.size() << endl;
+        for(int i = 0; i < microsatellites.size(); i++) {
+            cout << microsatellites[i] << " (start: " << positions[i].first << ", end: " << positions[i].second << ")" << endl;
+        }
+    }
 };
-
-
 
 int main() {
     HashTable hashtable;
-    hashtable.findSubMicrosat(2,5,"GCTATATATATATATATATATATATATATATATATATATATATATATATATATATATATGGG");
-    hashtable.printHashTable();
-    for (auto& [key, vec] : hashtable.checkIfNextToeachOther()){
+    /*
+    hashtable.findSubMicrosat(2,5,"ATATATGCATATAT");
+    //hashtable.printHashTable();
+    for (auto& [key, vec] : hashtable.checkIfNextToeachOther(3)){
         cout << key << "    ";
         for (int i : vec){
             cout << "  " << i;
         }
          cout << "\n";
-    }
+    }*/
+    hashtable.test();
 
 }
