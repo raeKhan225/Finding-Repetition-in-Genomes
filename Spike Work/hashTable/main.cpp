@@ -34,6 +34,11 @@ public:
             {'V',"GCAN"},
             {'N',"ACGTMRYKSWBDHV"},
      };
+    // https://noobtuts.com/cpp/compare-float-values
+    bool compareFloats(float currMismatchPerc, float mismatchPerc, float epsilon = 0.001f)
+    {
+        return (fabs(currMismatchPerc - mismatchPerc) < epsilon);
+    }
 
     /**
      * FindMicrosat find the micosatellites in a DNA sequence
@@ -49,11 +54,13 @@ public:
      */
 
     // need to deal with mismatches
-    void findMicrosat(const string& sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat) {
+    void findMicrosat(const string& sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat, float mismatchPerc) {
         // Get length of the sequence
         int lenOfSequence = sequence.length();
-        string noMismatchRepeat = "";
-        string microSat = "";
+        string noMismatchRepeat;
+        string microSat;
+        float currMismatchPerc = 0.0;
+        int noMismatches = 0;
         int penaltyScore = 0;
 
         // Go through each nucleotide in sequence as microsat can start from any position
@@ -72,28 +79,38 @@ public:
 
                 // add first microsat
                 microSat = sequence.substr(nucleotidePos, lenOfRepeats);
-                while (compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats))){
+                while (compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats)) or
+                        currMismatchPerc < mismatchPerc){
+
+
+
+                    // updating mismatch percentage
+                    if (not compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats))){
+                        noMismatches += 1 ;
+                        currMismatchPerc = float(noMismatches)/float(microSat.length());
+                        cout << "Current mismatch percentage: " << noMismatches<<"/"<< microSat.length() <<"  =  "<<currMismatchPerc << endl;
+                    }
+
+                    // break out of loop if end of sequence
+                    if(endPos + minLenRepeats > lenOfSequence or currMismatchPerc >= mismatchPerc){
+                        break;
+                    }
+
                     // assigned to the end of the second substring, *2 as nucleotidePos is the start pos of the first substring
                     lenThreshold++;
                     microSat += sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats);
                     nucleotidePos += lenOfRepeats;
                     endPos = nucleotidePos + lenOfRepeats-1;
 
-
-                    // need to plus 1 if the last two sub stings of sequence, and they match
-                    if(endPos + 1 == lenOfSequence ){
-                        //lenThreshold ++;
-                        break;
-                    }
                 }
 
                 // if repeats meet the threshold output the result
-                if (lenThreshold >= minLenMicrosat) {
-                    cout << sequence.substr(nucleotidePos, lenOfRepeats) << "   StartPos: " << startPos << "   EndPos: "
-                         << endPos << endl;
-                    cout << microSat << endl;
+                if (lenThreshold >= minLenMicrosat ) {
+                    currMismatchPerc = 0.0;
+
+                    cout << "Microsatellite found: "<< microSat << endl;
                     string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
-                    cout << mostCommonRepeat << endl;
+
                     //addToHashtable(sequence.substr(nucleotidePos, lenOfRepeats), startPos, endPos);
                     addToHashtable( mostCommonRepeat, startPos,endPos);
                 }
@@ -104,21 +121,55 @@ public:
 
     // this function is used after a micosat s found to find the most common repeat in the microsat so that the repeat value can be added to
     // the hashtable accurately instead of it being just the last repeat at the end of the micosat
-    string findMostCommonRepeatInMicoSat(string microsat, int repeatLen){ // can cause issues when finding repeats and adding to hashtable
+    string findMostCommonRepeatInMicoSat(string microsat, int repeatLen) { // can cause issues when finding repeats and adding to hashtable
         unordered_map<string, int> counter;
-        string mostCommonRepeat = "";
+        string mostCommonRepeat;
         int maxVal = -1;
+
+
         // counts the number of that specific repeat and adds them to the hashtable
-        for(int i = 0; i < microsat.length(); i+= repeatLen){
+        for (int i = 0; i < microsat.length(); i += repeatLen) {
             int initialCount = counter[microsat.substr(i, repeatLen)];
-            counter[microsat.substr(i, repeatLen)] = initialCount ++;
+            int currentCount = initialCount + 1;
+            counter[microsat.substr(i, repeatLen)] = currentCount;
         }
-        // Goes through the hashtable and returns the most common repeat
+        // Base case
+        bool flag = false;
         for (auto &[key, val]: counter) {
-            if(val >= maxVal){
+            if (val >= maxVal) {
+                cout << "Most common repeat:" << key << "  " << val << endl;
                 mostCommonRepeat = key;
+                maxVal = val;
             }
+
         }
+        // If the counter contains any alpha numeric value that are not ATGC then it favours then next most common value
+        while (!counter.empty()) {
+            // Goes through the hashtable and returns the most common repeat
+            for (auto &[key, val]: counter) {
+                if (val >= maxVal) {
+                    cout << "Most common repeat:" << key << "  " << val << endl;
+                    mostCommonRepeat = key;
+                    maxVal = val;
+                }
+
+            }
+            // Goes through each char in the repeat to see if its not ATGC
+            for (auto c: mostCommonRepeat) {
+                // want to make sure that value isn't saved with NNN due to percantage of mismatch allowence
+                if (c == 'N' or c == 'M' or c == 'R' or c == 'Y' or c == 'K' or c == 'S' or c == 'W' or c == 'B' or
+                    c == 'D' or c == 'H' or c == 'V') {
+                    counter.erase(mostCommonRepeat);
+                    flag = true;
+                    break;
+                }
+            }
+            // returns the most common if the flag hasnt been raised
+            if (not flag){return mostCommonRepeat;}
+            flag = false;
+        }
+
+
         return mostCommonRepeat;
     };
 
@@ -191,6 +242,7 @@ int main() {
     int minLenRepeats;
     int maxLenRepeats;
     int minLenMicrosat;
+    float mismatchPerc;
 
     cout << "Enter the sequence: ";
     cin >> sequence;
@@ -204,9 +256,10 @@ int main() {
     cout << "Enter the maximum length of repeats: ";
     cin >> maxLenRepeats;
 
-    cout << "Enter how many mismatches are allowed: ";
-    cin >> maxLenRepeats;
+    cout << "Enter mismatches percentage allowed: ";
+    cin >> mismatchPerc;
 
     MicrosatFinder microsatFinder;
-    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat);
+    cout << "Input:" << sequence << " , " << minLenRepeats << ", "<< maxLenRepeats << " , "<< minLenMicrosat << " , "<< mismatchPerc << endl;
+    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
 }
