@@ -53,6 +53,7 @@ public:
         // Get length of the sequence
         int lenOfSequence = sequence.length();
         string noMismatchRepeat = "";
+        string microSat = "";
         int penaltyScore = 0;
 
         // Go through each nucleotide in sequence as microsat can start from any position
@@ -67,16 +68,21 @@ public:
                 // check if the repeat repeats itself
                 int startPos = nucleotidePos;
                 int endPos = -1; // set initial;y to -1 in case correct endpos hasn't been found
-                int lenThreshold = 0; // check to see if repeats pass the len threshold fo it to be considered a microsatellite
+                int lenThreshold = 1; // check to see if repeats pass the len threshold fo it to be considered a microsatellite - HAS TO B ONE  cause else it will disclude the fist repeat
+
+                // add first microsat
+                microSat = sequence.substr(nucleotidePos, lenOfRepeats);
                 while (compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats))){
                     // assigned to the end of the second substring, *2 as nucleotidePos is the start pos of the first substring
                     lenThreshold++;
+                    microSat += sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats);
                     nucleotidePos += lenOfRepeats;
                     endPos = nucleotidePos + lenOfRepeats-1;
 
+
                     // need to plus 1 if the last two sub stings of sequence, and they match
                     if(endPos + 1 == lenOfSequence ){
-                        lenThreshold ++;
+                        //lenThreshold ++;
                         break;
                     }
                 }
@@ -85,12 +91,36 @@ public:
                 if (lenThreshold >= minLenMicrosat) {
                     cout << sequence.substr(nucleotidePos, lenOfRepeats) << "   StartPos: " << startPos << "   EndPos: "
                          << endPos << endl;
-                    addToHashtable(sequence.substr(nucleotidePos, lenOfRepeats), startPos, endPos);
+                    cout << microSat << endl;
+                    string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
+                    cout << mostCommonRepeat << endl;
+                    //addToHashtable(sequence.substr(nucleotidePos, lenOfRepeats), startPos, endPos);
+                    addToHashtable( mostCommonRepeat, startPos,endPos);
                 }
             }
         }
         printHashTable();
     }
+
+    // this function is used after a micosat s found to find the most common repeat in the microsat so that the repeat value can be added to
+    // the hashtable accurately instead of it being just the last repeat at the end of the micosat
+    string findMostCommonRepeatInMicoSat(string microsat, int repeatLen){ // can cause issues when finding repeats and adding to hashtable
+        unordered_map<string, int> counter;
+        string mostCommonRepeat = "";
+        int maxVal = -1;
+        // counts the number of that specific repeat and adds them to the hashtable
+        for(int i = 0; i < microsat.length(); i+= repeatLen){
+            int initialCount = counter[microsat.substr(i, repeatLen)];
+            counter[microsat.substr(i, repeatLen)] = initialCount ++;
+        }
+        // Goes through the hashtable and returns the most common repeat
+        for (auto &[key, val]: counter) {
+            if(val >= maxVal){
+                mostCommonRepeat = key;
+            }
+        }
+        return mostCommonRepeat;
+    };
 
     bool compareRepeats(string firstRepeat, string secondRepeat){ // both first and second repeat should be the same size
         int lenFirstRepeat = firstRepeat.length();
