@@ -64,9 +64,11 @@ public:
 
         int noMismatches = 0;
         // UGHHHH wanted to do for loops the other way around - AMANDA
-        for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
-            // Go through each nucleotide in sequence as microsat can start from any position
-            for (int nucleotidePos = 0; nucleotidePos < lenOfSequence - lenOfRepeats; nucleotidePos++) {
+        for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
+            for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
+                if (nucleotidePos + lenOfRepeats >= lenOfSequence -1 ){break;}
+                // Go through each nucleotide in sequence as microsat can start from any position
+
                 // resetting values
                 int startPos = nucleotidePos;
                 float currMismatchPerc = 0.0;
