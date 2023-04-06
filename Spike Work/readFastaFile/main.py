@@ -1,6 +1,7 @@
 def read_fasta_file(file):
     fasta_dict = {}
     fasta_file_lines = open(file, "r").readlines()
+    whole_sequence = ""
 
     # Tries to read FASTA file
     try:
@@ -14,9 +15,16 @@ def read_fasta_file(file):
 
             # replacing old seq with updated
             fasta_dict[key] = seq
-        return fasta_dict
+        # return fasta_dict
 
     except Exception as e:
         print("Error when reading FASTA file : " + e)
 
-read_fasta_file("/Users/raeesahkhan/Documents/uni/Major_Project/Tests/01_test.fa")
+    for key, value in fasta_dict.items():
+        whole_sequence += value
+
+    return whole_sequence
+
+
+
+print(read_fasta_file("/Users/raeesahkhan/Documents/uni/Major_Project/Tests/01_test.fa"))
