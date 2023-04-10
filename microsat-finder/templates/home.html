@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %} Home page {% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+
+    <h1>Microsatellite Finder</h1>
+    <p class="container font-weight-light "> Microsatellites (also known as Simple Sequence Repeats (SSRs)) are
+        repetitive sections of DNA that repeat throughout the genome. Microsatellites are important for bioinformatics
+        because they can be used to advance our understanding of biological systems, genetic diversity, and evolutionary
+        processes. Furthermore, microsatellites are also useful for identifying and tracking genetic changes in
+        populations, including those that may be important for human health or that are associated with diseases. Most
+        commonly, Microsatellites are considered to be between 2 and 7 bases long.</p>
+
+    <div class="button-box ">
+        <a class="btn btn-dark font-weight-light" href="/upload" role="button" style="background-color: black"
+           aria-pressed="true">Upload FASTA file</a>
+
+        <button type="button" class="btn btn-dark" data-toggle="modal" style="background-color: black"
+                data-target=".progress-modal-lg">
+            View Current Jobs
+        </button>
+
+        <div class="modal fade progress-modal-lg" id="progress-modal" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title " id="progress-modal-label">Progress of Current Jobs</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p class="container font-weight-light "> Please enter the email address that you used
+                            to submit your current jobs, once submitted an email will be sent to this account listing
+                            the current
+                            jobs associated with the entered email address. </p>
+                        <form>
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="inputEmail"
+                                       aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-dark">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-dark font-weight-light" href="https://github.com/raeKhan225/Finding-Repetition-in-Genomes"
+           role="button" style="background-color: black" aria-pressed="true">View Documentation (GitHub)</a>
+    </div>
+
+    <div class="container py-5">
+        <h2>Download</h2>
+        <div class="row">
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm text-right">
+                size
+            </div>
+            <div class="col-sm text-right">
+                Date
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <a href="https://github.com/raeKhan225/Finding-Repetition-in-Genomes">
+                    Finding-Repetition-in-Genomes </a>
+            </div>
+            <div class="col-sm text-right">
+                1MB
+            </div>
+            <div class="col-sm text-right">
+                10 April 2023
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}
