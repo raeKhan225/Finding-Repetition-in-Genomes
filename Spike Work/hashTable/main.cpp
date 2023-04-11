@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace std;
+
 
 class MicrosatFinder {
 public:
@@ -11,14 +11,14 @@ public:
      * The hashtable key is the pat that is in the microsat
      * the vector stores the start and stop positions of where the micosat with that repeat occurs
      */
-    unordered_map<string, vector<int>> hashtable;
+    std::unordered_map<std::string, std::vector<int>> hashtable;
     int penaltyScore = 0;
 
     /**
      * Mismatch table
      */
     // used sting instead of array because of https://stackoverflow.com/questions/21946447/how-much-performance-difference-when-using-string-vs-char-array
-    unordered_map<char, string> misMatchTbl = { // should i order values in most to least likeyly??
+    std::unordered_map<char, std::string> misMatchTbl = { // should i order values in most to least likeyly??
             {'A', "MRDHVWN"},
             {'C', "YSBHVMN"},
             {'G', "RKSBDVN"},
@@ -34,12 +34,9 @@ public:
             {'H', "ACTN"},
             {'V', "GCAN"},
             {'N', "ACGTMRYKSWBDHV"},
+            {'-', "ACGTMRYKSWBDHV"}
     };
 
-    // https://noobtuts.com/cpp/compare-float-values
-    bool compareFloats(float currMismatchPerc, float mismatchPerc, float epsilon = 0.001f) {
-        return (fabs(currMismatchPerc - mismatchPerc) < epsilon);
-    }
 
     /**
      * FindMicrosat find the micosatellites in a DNA sequence
@@ -56,17 +53,20 @@ public:
 
     // need to deal with mismatches
     void
-    findMicrosat(const string &sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat, float mismatchPerc) {
+    findMicrosat(const std::string &sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat, float mismatchPerc,
+                 std::vector<std::string> scaffoldNames,
+                 std::vector<int> scaffoldSizes) {
+
         // Get length of the sequence
         int lenOfSequence = sequence.length();
-        string noMismatchRepeat;
-        string microSat;
+        std::string noMismatchRepeat;
+        std::string microSat;
 
         int noMismatches = 0;
         // UGHHHH wanted to do for loops the other way around - AMANDA
         for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
             for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
-                if (nucleotidePos + lenOfRepeats >= lenOfSequence -1 ){break;}
+                if (nucleotidePos + lenOfRepeats >= lenOfSequence - 1) { break; }
                 // Go through each nucleotide in sequence as microsat can start from any position
 
                 // resetting values
@@ -104,16 +104,50 @@ public:
                 // if repeats meet the threshold output the result
                 if (lenThreshold >= minLenMicrosat) {
 
-                    cout << "Microsatellite found: " << microSat << endl;
-                    string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
+                    std::cout << "Microsatellite found: " << microSat << std::endl;
+                    std::string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
                     //addToHashtable(sequence.substr(nucleotidePos, lenOfRepeats), startPos, endPos);
                     addToHashtable(mostCommonRepeat, startPos, endPos);
                 }
             }
         }
         printHashTable();
+
     }
 
+    // looks wrong :((
+    void findMicrosatsInscaffolds(std::vector<std::string> scaffoldNames, std::vector<int> scaffoldSizes) {
+        std::vector<std::string> foundScaffoldNamesToMicrosat;
+        std::vector <std::vector<std::string>> scaffoldNamesToMicrosat ;
+
+
+        for (auto &[key, vec]: hashtable) {
+            int lenCountseq = 0;
+            std::vector<std::string>microsatScaffoldpos;
+            microsatScaffoldpos.push_back(key);
+            for (int i = 0 ; i < vec.size(); i = i + 2) {
+                int startPos = vec[i];
+                int endPos = vec[i ++];
+
+                for (int scaffoldSizepos = 0; scaffoldSizepos < scaffoldSizes.size(); scaffoldSizepos++) {
+                   // if (endPos < lenCountseq){break;}
+                    if (startPos <= lenCountseq and endPos >= lenCountseq) {
+                        microsatScaffoldpos.push_back(scaffoldNames[scaffoldSizepos]);
+                    }
+                    lenCountseq += scaffoldSizes[scaffoldSizepos];
+
+                }
+            }
+            scaffoldNamesToMicrosat.push_back(microsatScaffoldpos);
+        }
+
+        for(auto vec: scaffoldNamesToMicrosat){
+            for(auto stringVal : vec) {
+                std::cout << stringVal << "  ";
+            }
+            std::cout << "\n";
+        }
+    }
     /**
      *
      * @param microsat
@@ -123,11 +157,11 @@ public:
 
     // this function is used after a micosat s found to find the most common repeat in the microsat so that the repeat value can be added to
     // the hashtable accurately instead of it being just the last repeat at the end of the micosat
-    static string findMostCommonRepeatInMicoSat(const string &microsat,
+    static std::string findMostCommonRepeatInMicoSat(const std::string &microsat,
                                                 int repeatLen) { // can cause issues when finding repeats and adding to hashtable
 
-        unordered_map<string, int> counter;
-        string mostCommonRepeat;
+        std::unordered_map<std::string, int> counter;
+        std::string mostCommonRepeat;
 
         // counts the number of that specific repeat and adds them to the hashtable
         for (int i = 0; i + repeatLen <= microsat.length() - 1; i += repeatLen) {
@@ -137,9 +171,9 @@ public:
         }
 
         // Printing of Unordered_MAP
-        cout << "Counter HASHTABLE" << endl;
+        std::cout << "Counter HASHTABLE" << std::endl;
         for (auto &[key, vec]: counter) {
-            cout << key << "    " << vec << endl;
+            std::cout << key << "    " << vec << std::endl;
 
         }
         int maxVal = -1;
@@ -152,7 +186,6 @@ public:
                 maxVal = val;
             }
         }
-
         return mostCommonRepeat;
     };
 
@@ -163,7 +196,7 @@ public:
      * @return bool if the repeats match
      */
     bool
-    compareRepeats(string firstRepeat, string secondRepeat) { // both first and second repeat should be the same size
+    compareRepeats(std::string firstRepeat, std::string secondRepeat) { // both first and second repeat should be the same size
         int lenFirstRepeat = firstRepeat.length();
         // Goes through the bases in the first repeat
         for (int base = 0; base < lenFirstRepeat; base++) {
@@ -171,7 +204,7 @@ public:
             if (firstRepeat[base] == secondRepeat[base]) {
                 continue;
             } else {
-                string mismatches = misMatchTbl[firstRepeat[base]];
+                std::string mismatches = misMatchTbl[firstRepeat[base]];
                 for (int i = 0; i < mismatches.length(); i++) {
                     if (secondRepeat[base] == mismatches[i]) { break; }
                     else if (i == mismatches.length() - 1) {
@@ -190,7 +223,7 @@ public:
      * @param endPos
      */
     // need to find which sequence it is in
-    void addToHashtable(const string &repeat, int startPos, int endPos) {
+    void addToHashtable(const std::string &repeat, int startPos, int endPos) {
 
         // If repeat is not in hashtable - if micosat hasn't been found already
         if (hashtable.find(repeat) == hashtable.end()) {
@@ -199,7 +232,7 @@ public:
 
             // if microsat has already been found in another position
         else {
-            vector<int> vec = hashtable[repeat];
+            std::vector<int> vec = hashtable[repeat];
             // Updating the vector with additional start and stop positions
             vec.push_back(startPos);
             vec.push_back(endPos);
@@ -213,14 +246,14 @@ public:
 
     void printHashTable() {
         // Printing of Unordered_MAP
-        cout << "HASHTABLE" << endl;
+        std::cout << "HASHTABLE" << std::endl;
         for (auto &[key, vec]: hashtable) {
-            cout << "Key: " << key << "    " << endl;
-            cout << "Start and end positions: ";
+            std::cout << "Key: " << key << "    " << std::endl;
+            std::cout << "Start and end positions: ";
             for (int i: vec) {
-                cout << i << "  ";
+                std::cout << i << "  ";
             }
-            cout << "\n";
+            std::cout << "\n";
         }
     }
 
@@ -231,28 +264,32 @@ public:
 
 int main() {
     // A repeat is the repeat in a micosat i.e. ATGATGATGATGATGATG the repeat = ATG
-    string sequence;
+    std::string sequence;
     int minLenRepeats;
     int maxLenRepeats;
     int minLenMicrosat;
     float mismatchPerc;
 
-    cout << "Enter the sequence: ";
-    cin >> sequence;
+    std::cout << "Enter the sequence: ";
+    std::cin >> sequence;
 
-    cout << "Enter the minimum length of the Microsat: ";
-    cin >> minLenMicrosat;
+    std::cout << "Enter the minimum length of the Microsat: ";
+    std::cin >> minLenMicrosat;
 
-    cout << "Enter the minimum length of repeats: ";
-    cin >> minLenRepeats;
+    std::cout << "Enter the minimum length of repeats: ";
+    std::cin >> minLenRepeats;
 
-    cout << "Enter the maximum length of repeats: ";
-    cin >> maxLenRepeats;
+    std::cout << "Enter the maximum length of repeats: ";
+    std::cin >> maxLenRepeats;
 
-    cout << "Enter mismatches percentage allowed: ";
-    cin >> mismatchPerc;
+    std::cout << "Enter mismatches percentage allowed: ";
+    std::cin >> mismatchPerc;
 
     MicrosatFinder microsatFinder;
 
-    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
+    std::vector<std::string> scaffoldNames = {"scaffold_10", "scaffold_1", "scaffold_2", "scaffold_no"};
+    std::vector<int> scaffoldSizes = {5, 7, 6, 12};
+
+    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc, scaffoldNames,scaffoldSizes);
+    microsatFinder.findMicrosatsInscaffolds(scaffoldNames, scaffoldSizes);
 }

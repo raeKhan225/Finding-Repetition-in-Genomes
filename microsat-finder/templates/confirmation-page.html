@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %} Confirmation Page {% endblock %}
+
+{% block content %}
+<div class=" container p-4   ">
+    <h3>Confirm submission</h3>
+    <p>
+        Email address: {{ emailAddress }} <br>
+        Project Title: {{ projectTitle}} <br>
+        minKmerLength: {{ minKmerLength}} <br>
+        maxKmerLength: {{ maxKmerLength}} <br>
+        minMicrosatLength: {{ minMicrosatLength}} <br>
+        graphType: {{ graphType}} <br>
+        fastaFile: {{ fastaFile}} <br>
+
+    </p>
+    <div class="d-flex">
+        <form action="/upload/">
+            <button type="submit" class="btn btn-secondary font-weight-light" style="background-color: black"
+                    value="Cancel">Cancel
+            </button>
+        </form>
+        <form action="/">
+            <button type="submit" class="btn btn-secondary font-weight-light" style="background-color: black"
+                    value="Confirm<">Confirm
+            </button>
+        </form>
+    </div>
+
+
+</div>
+{% endblock %}
