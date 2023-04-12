@@ -54,7 +54,7 @@ public:
                       int mismatchPerc) {
 
         // Get length of the sequence
-        int lenOfSequence = sequence.length();
+        int lenOfSequence = int(sequence.length());
 
 
         // Going through all the potential repeat lengths
@@ -85,7 +85,7 @@ public:
                 bool compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
 
 
-                while (compareAdjRepeats or ((noMismatches / microSat.length()*100) < mismatchPerc)) {
+                while (compareAdjRepeats or (int(noMismatches / microSat.length()*100) < mismatchPerc)) {
 
                     // updating mismatch percentage to see if the threshold has been passed
                     // checks before adding new value to microsatllite
@@ -189,7 +189,7 @@ public:
      * @return bool if the repeats match
      */
     bool compareRepeats(std::string firstRepeat, std::string secondRepeat) { // both first and second repeat should be the same size
-        int lenFirstRepeat = firstRepeat.length();
+        int lenFirstRepeat = int(firstRepeat.length());
         // Goes through the bases in the first repeat
         for (int base = 0; base < lenFirstRepeat; base++) {
             // if the first base is equal to the second base i.e. A = A
@@ -275,6 +275,6 @@ int main() {
 
     MicrosatFinder microsatFinder;
 
-    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
+    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, int(mismatchPerc));
 
 }

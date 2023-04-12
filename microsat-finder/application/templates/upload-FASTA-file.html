@@ -34,19 +34,19 @@
     <form class="font-weight-light" action="/confirm/" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="inputEmail">Email address</label>
-            <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter email">
+            <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter email" required>
         </div>
         <div class="form-group">
             <label for="projectTitle">Project Title</label>
             <input type="text" class="form-control" id="projectTitle" name="projectTitle"
-                   placeholder="Enter Project Title">
+                   placeholder="Enter Project Title" required>
         </div>
 
         <div class="form-group">
             <label for="minKmerLength">Min K-mer Length</label>
-            <select id="minKmerLength" class="form-control" name="minKmerLength">
-                <option selected>Select size</option>
-                <option>2</option>
+            <select id="minKmerLength" class="form-control" name="minKmerLength" required>
+                <option selected value="">Select size</option>
+                <option value="">2</option>
                 <option>3</option>
                 <option>4</option>
                 <option>5</option>
@@ -56,8 +56,8 @@
         <div class="form-group">
 
             <label for="maxKmerLength">Max K-mer Length</label>
-            <select id="maxKmerLength" class="form-control" name="maxKmerLength">
-                <option selected>Select size</option>
+            <select id="maxKmerLength" class="form-control" name="maxKmerLength" required>
+                <option selected value="">Select size</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
@@ -68,8 +68,8 @@
         <div class="form-group">
 
             <label for="minMicrosatLength">Min Microsat Length</label>
-            <select id="minMicrosatLength" class="form-control" name="minMicrosatLength">
-                <option selected>Select size</option>
+            <select id="minMicrosatLength" class="form-control" name="minMicrosatLength" required>
+                <option selected value="">Select size</option>
                 <option>3</option>
                 <option>4</option>
                 <option>5</option>
@@ -80,8 +80,9 @@
         <div class="form-group">
 
             <label for="graphType">Graph choice</label>
-            <select id="graphType" class="form-control" name="graphType">
-                <option selected>Select size</option>
+            <select id="graphType" class="form-control" name="graphType" required>
+                <option selected value="">Select graph</option>
+                <option>None</option>
                 <option>Bar graph</option>
                 <option>Scatter graph</option>
                 <option>X graph</option>
@@ -89,9 +90,9 @@
         </div>
         <div class="form-group">
             <label for="fastaFile">Upload FASTA file</label>
-            <input type="file" class="form-control-file font-weight-light" id="fastaFile" name="fastaFile">
+            <input type="file" class="form-control-file font-weight-light" id="fastaFile" name="fastaFile" required>
         </div>
-
+        <p class="error error--hidden">
         <button type="submit" class="btn btn-secondary btn-lg btn-block font-weight-light"
                 style="background-color: black">Submit
         </button>
