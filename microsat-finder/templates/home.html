@@ -34,17 +34,14 @@
                             to submit your current jobs, once submitted an email will be sent to this account listing
                             the current
                             jobs associated with the entered email address. </p>
-                        <form>
+                        <form action="/viewCurrentJobs/" method="POST">
                             <div class="form-group">
                                 <input type="email" class="form-control" id="inputEmail"
                                        aria-describedby="emailHelp" placeholder="Enter email">
                             </div>
+                            <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-dark">Submit</button>
                         </form>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-dark">Submit</button>
                     </div>
                 </div>
             </div>

@@ -3,8 +3,6 @@
 #include <unordered_map>
 #include <vector>
 
-
-
 class MicrosatFinder {
 public:
     /**
@@ -52,47 +50,79 @@ public:
      */
 
     // need to deal with mismatches
-    void
-    findMicrosat(const std::string &sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat, float mismatchPerc,
-                 std::vector<std::string> scaffoldNames,
-                 std::vector<int> scaffoldSizes) {
+    void findMicrosat(const std::string &sequence, int minLenRepeats, int maxLenRepeats, int minLenMicrosat,
+                      int mismatchPerc) {
 
         // Get length of the sequence
         int lenOfSequence = sequence.length();
-        std::string noMismatchRepeat;
-        std::string microSat;
 
-        int noMismatches = 0;
-        // UGHHHH wanted to do for loops the other way around - AMANDA
-        for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
-            for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
-                if (nucleotidePos + lenOfRepeats >= lenOfSequence - 1) { break; }
-                // Go through each nucleotide in sequence as microsat can start from any position
+
+        // Going through all the potential repeat lengths
+        for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
+            // Going through all bases in the sequence 0 indexed, as microsat can start from any position
+
+
+            for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
+
+                // Check if it's the end of the sequence - will cut off the end of a sequence
+                if (nucleotidePos + lenOfRepeats > lenOfSequence) { break; }
 
                 // resetting values
                 int startPos = nucleotidePos;
-                float currMismatchPerc = 0.0;
-                int endPos = -1; // set initial;y to -1 in case correct endpos hasn't been found
-                int lenThreshold = 1; // check to see if repeats pass the len threshold fo it to be considered a microsatellite - HAS TO B ONE  cause else it will disclude the fist repeat
+                //float currMismatchPerc = 0;
+                // set initial;y to -1 in case correct endPos hasn't been found
+                int endPos = -1;
+                // check to see if repeats pass the minlenMicrosat threshold fo it to be considered a microsatellite
+                int lenThreshold = 0;
+                std::string microSat;
+                float noMismatches = 0;
 
-                // add first microsat
-                microSat = sequence.substr(nucleotidePos, lenOfRepeats);
-                while (compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),
-                                      sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats)) or
-                       currMismatchPerc <= mismatchPerc) {
 
-                    // updating mismatch percentage
-                    if (not compareRepeats(sequence.substr(nucleotidePos, lenOfRepeats),
-                                           sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats))) {
-                        noMismatches += 1;
-                        currMismatchPerc = float(noMismatches) / float(microSat.length());
+                // while first and second repeats equals each other and the mismatch percentage hasn't been crossed
+                // compare repeats include comparing non ATGC values
+                std::string firstRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
+                std::string secondRepeat = sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats);
+                bool compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
 
+
+                while (compareAdjRepeats or ((noMismatches / microSat.length()*100) < mismatchPerc)) {
+
+                    // updating mismatch percentage to see if the threshold has been passed
+                    // checks before adding new value to microsatllite
+                    if (not compareAdjRepeats and not microSat.empty()) {
+                        // compares each position in each repeat to see how far the repeats don't match
+                        for (int i = 0; i < lenOfRepeats; i++) {
+                            if (firstRepeat[i] != secondRepeat[i]) { noMismatches++; }
+                            if ((noMismatches / microSat.length()*100) > mismatchPerc){break;}
+                            // adds individual char to string if the percentage threshold is not breached
+                            else{
+                                microSat += secondRepeat[i];
+                            }
+                        }
+                        if ((noMismatches / microSat.length()*100) > mismatchPerc){
+                            // move onto next adjacent repeats
+                            nucleotidePos += lenOfRepeats;
+                            // need to make it find the most common repeat in the microssatellite in case
+                            // two microsatellites are next to each other
+                            firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
+                            secondRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
+                            compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
+                            break;
+                        }
                     }
-                    lenThreshold++;
-                    microSat += sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats);
+                    // if the microsat length is empty found pos of the microsat the threshold needs to be increase
+                    if (microSat.empty()) {
+                        lenThreshold++;
+                        microSat = firstRepeat;
+                    }
+                        // adds the second repeat to the microsat string
+                    else if (compareAdjRepeats){
+                        microSat += secondRepeat;
+                        lenThreshold++;
+                    }
 
-                    // assigned to the end of the second substring, *2 as nucleotidePos is the start pos of the first substring
-                    nucleotidePos += lenOfRepeats;
+
+                    // assigned to the end of the second substring
                     endPos = nucleotidePos + lenOfRepeats - 1;
 
                     // break out of loop if end of sequence
@@ -100,54 +130,30 @@ public:
                         break;
                     }
 
+
+                    // move onto next adjacent repeats
+                    nucleotidePos += lenOfRepeats;
+                    // need to make it find the most common repeat in the microssatellite in case
+                    // two microsatellites are next to each other
+                    firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
+                    secondRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
+                    compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
                 }
+
                 // if repeats meet the threshold output the result
                 if (lenThreshold >= minLenMicrosat) {
-
-                    std::cout << "Microsatellite found: " << microSat << std::endl;
+                    std::cout << "Microsatellite found: " << microSat << "\n";
+                    // most common repeat is used due to mismatches in the sequence
                     std::string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
-                    //addToHashtable(sequence.substr(nucleotidePos, lenOfRepeats), startPos, endPos);
                     addToHashtable(mostCommonRepeat, startPos, endPos);
                 }
             }
         }
+
         printHashTable();
-
     }
 
-    // looks wrong :((
-    void findMicrosatsInscaffolds(std::vector<std::string> scaffoldNames, std::vector<int> scaffoldSizes) {
-        std::vector<std::string> foundScaffoldNamesToMicrosat;
-        std::vector <std::vector<std::string>> scaffoldNamesToMicrosat ;
 
-
-        for (auto &[key, vec]: hashtable) {
-            int lenCountseq = 0;
-            std::vector<std::string>microsatScaffoldpos;
-            microsatScaffoldpos.push_back(key);
-            for (int i = 0 ; i < vec.size(); i = i + 2) {
-                int startPos = vec[i];
-                int endPos = vec[i ++];
-
-                for (int scaffoldSizepos = 0; scaffoldSizepos < scaffoldSizes.size(); scaffoldSizepos++) {
-                   // if (endPos < lenCountseq){break;}
-                    if (startPos <= lenCountseq and endPos >= lenCountseq) {
-                        microsatScaffoldpos.push_back(scaffoldNames[scaffoldSizepos]);
-                    }
-                    lenCountseq += scaffoldSizes[scaffoldSizepos];
-
-                }
-            }
-            scaffoldNamesToMicrosat.push_back(microsatScaffoldpos);
-        }
-
-        for(auto vec: scaffoldNamesToMicrosat){
-            for(auto stringVal : vec) {
-                std::cout << stringVal << "  ";
-            }
-            std::cout << "\n";
-        }
-    }
     /**
      *
      * @param microsat
@@ -157,31 +163,23 @@ public:
 
     // this function is used after a micosat s found to find the most common repeat in the microsat so that the repeat value can be added to
     // the hashtable accurately instead of it being just the last repeat at the end of the micosat
-    static std::string findMostCommonRepeatInMicoSat(const std::string &microsat,
-                                                int repeatLen) { // can cause issues when finding repeats and adding to hashtable
+    static std::string findMostCommonRepeatInMicoSat(const std::string &microsat, int repeatLen) {
 
         std::unordered_map<std::string, int> counter;
         std::string mostCommonRepeat;
+        // maxVal keeps track of the maximum value in the microsat
+        int maxVal = -1;
 
         // counts the number of that specific repeat and adds them to the hashtable
-        for (int i = 0; i + repeatLen <= microsat.length() - 1; i += repeatLen) {
+        for (int i = 0; i + repeatLen < microsat.length() ; i += repeatLen) {
             int initialCount = counter[microsat.substr(i, repeatLen)];
             int currentCount = initialCount + 1;
             counter[microsat.substr(i, repeatLen)] = currentCount;
         }
 
-        // Printing of Unordered_MAP
-        std::cout << "Counter HASHTABLE" << std::endl;
-        for (auto &[key, vec]: counter) {
-            std::cout << key << "    " << vec << std::endl;
-
-        }
-        int maxVal = -1;
-        // If the counter contains any alpha numeric value that are not ATGC then it favours then next most common value GET RID
+        // Goes through unordered maps of counts to the repeat value in the microsat
         for (auto &[key, val]: counter) {
-            // Goes through the hashtable and returns the most common repeat
             if (val > maxVal) {
-                // Goes through each char in the repeat to see if its not ATGC
                 mostCommonRepeat = key;
                 maxVal = val;
             }
@@ -195,8 +193,7 @@ public:
      * @param secondRepeat
      * @return bool if the repeats match
      */
-    bool
-    compareRepeats(std::string firstRepeat, std::string secondRepeat) { // both first and second repeat should be the same size
+    bool compareRepeats(std::string firstRepeat, std::string secondRepeat) { // both first and second repeat should be the same size
         int lenFirstRepeat = firstRepeat.length();
         // Goes through the bases in the first repeat
         for (int base = 0; base < lenFirstRepeat; base++) {
@@ -222,7 +219,6 @@ public:
      * @param startPos
      * @param endPos
      */
-    // need to find which sequence it is in
     void addToHashtable(const std::string &repeat, int startPos, int endPos) {
 
         // If repeat is not in hashtable - if micosat hasn't been found already
@@ -230,7 +226,7 @@ public:
             hashtable[repeat] = {startPos, endPos};
         }
 
-            // if microsat has already been found in another position
+        // if microsat has already been found in another position
         else {
             std::vector<int> vec = hashtable[repeat];
             // Updating the vector with additional start and stop positions
@@ -257,9 +253,6 @@ public:
         }
     }
 
-    void findSequence() {
-
-    }
 };
 
 int main() {
@@ -287,9 +280,6 @@ int main() {
 
     MicrosatFinder microsatFinder;
 
-    std::vector<std::string> scaffoldNames = {"scaffold_10", "scaffold_1", "scaffold_2", "scaffold_no"};
-    std::vector<int> scaffoldSizes = {5, 7, 6, 12};
+    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
 
-    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc, scaffoldNames,scaffoldSizes);
-    microsatFinder.findMicrosatsInscaffolds(scaffoldNames, scaffoldSizes);
 }

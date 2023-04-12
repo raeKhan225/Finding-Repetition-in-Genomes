@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 import pymongo
 
 app = Flask(__name__, template_folder='templates/')
@@ -34,6 +34,12 @@ def confirm():
 @app.route("/uploadingMicroSatDetails/", methods=['POST'])
 def uploading_microsat_details():
     return render_template("home.html")
+
+
+@app.route("/viewCurrentJobs/", methods=["POST"])
+def view_current_jobs():
+    # run python program to send email to the address
+    return redirect('/')
 
 
 if __name__ == '__main__':
