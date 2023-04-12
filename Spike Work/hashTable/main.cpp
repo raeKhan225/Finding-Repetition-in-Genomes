@@ -93,30 +93,24 @@ public:
                         // compares each position in each repeat to see how far the repeats don't match
                         for (int i = 0; i < lenOfRepeats; i++) {
                             if (firstRepeat[i] != secondRepeat[i]) { noMismatches++; }
-                            if ((noMismatches / microSat.length()*100) > mismatchPerc){break;}
-                            // adds individual char to string if the percentage threshold is not breached
-                            else{
-                                microSat += secondRepeat[i];
+                            // if adding part of a repeat breaks the threshold dont add the repeat to the microsat
+                            if ((noMismatches / microSat.length()*100) >= mismatchPerc){
+                                // go back nuclotide positions as not adding to microsat
+                                nucleotidePos = endPos ;
+                                break;
                             }
+
                         }
-                        if ((noMismatches / microSat.length()*100) > mismatchPerc){
-                            // move onto next adjacent repeats
-                            nucleotidePos += lenOfRepeats;
-                            // need to make it find the most common repeat in the microssatellite in case
-                            // two microsatellites are next to each other
-                            firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
-                            secondRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
-                            compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
-                            break;
-                        }
+                        if ((noMismatches / microSat.length()*100) >= mismatchPerc){break;}
                     }
+
                     // if the microsat length is empty found pos of the microsat the threshold needs to be increase
                     if (microSat.empty()) {
                         lenThreshold++;
                         microSat = firstRepeat;
                     }
                         // adds the second repeat to the microsat string
-                    else if (compareAdjRepeats){
+                    else{
                         microSat += secondRepeat;
                         lenThreshold++;
                     }
@@ -125,14 +119,15 @@ public:
                     // assigned to the end of the second substring
                     endPos = nucleotidePos + lenOfRepeats - 1;
 
-                    // break out of loop if end of sequence
-                    if (endPos >= lenOfSequence) {
+                    // break out of loop if the rest of sequence is not long enough for another comparision
+                    if (endPos + lenOfRepeats >= lenOfSequence) {
                         break;
                     }
 
-
                     // move onto next adjacent repeats
                     nucleotidePos += lenOfRepeats;
+                    //if (nucleotidePos + lenOfRepeats > lenOfSequence){break;}
+
                     // need to make it find the most common repeat in the microssatellite in case
                     // two microsatellites are next to each other
                     firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
