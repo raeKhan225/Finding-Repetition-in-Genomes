@@ -14,7 +14,7 @@ public:
     int mismatchPenalty;
     std::unordered_map<std::string, std::vector<int>> hashtable;
 
-    // Constructor // CHECK
+    //Constructor // CHECK
     MicrosatFinder(int nomatchPenalty, int mismatchPenalty) {
         this -> nomatchPenalty = nomatchPenalty; // ie. if the expected val at that pos is C but is actually G
         this -> mismatchPenalty = mismatchPenalty; //ie. if the expected val at that pos is G but is actually a val in the mismatch table ie. N
@@ -68,66 +68,73 @@ public:
 
         // Going through all the potential repeat lengths
         for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
+
             // Going through all bases in the sequence 0 indexed, as microsat can start from any position
-
-
             for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
+                //std::cout << nucleotidePos <<"\n";
 
                 // Check if it's the end of the sequence - will cut off the end of a sequence
-                if (nucleotidePos + lenOfRepeats > lenOfSequence) { break; }
+                if (nucleotidePos + lenOfRepeats >= lenOfSequence) { break; }
 
                 // resetting values
                 int startPos = nucleotidePos;
-                //float currMismatchPerc = 0;
+
+                int currMismatchPerc = 0;
                 // set initial;y to -1 in case correct endPos hasn't been found
-                int endPos = -1;
+                int endPos = 0;
                 // check to see if repeats pass the minlenMicrosat threshold fo it to be considered a microsatellite
                 int lenThreshold = 0;
                 std::string microSat;
                 float noMismatches = 0;
+                penaltyScore =0;
 
 
                 // while first and second repeats equals each other and the mismatch percentage hasn't been crossed
                 // compare repeats include comparing non ATGC values
                 std::string firstRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
                 std::string secondRepeat = sequence.substr(nucleotidePos + lenOfRepeats, lenOfRepeats);
-                bool compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
+                //bool compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
 
 
-                while (compareAdjRepeats or (int(noMismatches / microSat.length()*100) < mismatchPerc)) {
+                while (compareRepeats(firstRepeat, secondRepeat) or (currMismatchPerc <= mismatchPerc)) {
+                    // if the microsat length is empty found pos of the microsat the threshold needs to be increase
+                    if (microSat.empty()) {
+                        lenThreshold++;
+                        microSat = firstRepeat ;
+                    }
+                        // adds the second repeat to the microsat string
+
 
                     // updating mismatch percentage to see if the threshold has been passed
                     // checks before adding new value to microsatllite
-                    if (not compareAdjRepeats and not microSat.empty()) {
+                    if (not compareRepeats(firstRepeat, secondRepeat)) {
                         // compares each position in each repeat to see how far the repeats don't match
                         for (int i = 0; i < lenOfRepeats; i++) {
-                            if (firstRepeat[i] != secondRepeat[i]) {
-                            //if (not compareRepeats(std::to_string(firstRepeat[i]), std::to_string(secondRepeat[i]))) {
+                            //if (firstRepeat[i] != secondRepeat[i]) {
+                            if (not compareRepeats(firstRepeat.substr(i,1), secondRepeat.substr(i,1))) {
                                 //increase penalty score for each mismatch by 2
                                 penaltyScore += nomatchPenalty;
                                 noMismatches++;
+                                // Update mismatch percentage
+                                currMismatchPerc = int (noMismatches/ float(microSat.length()) *100);
                             }
                             // if adding part of a repeat breaks the threshold don't add the repeat to the microsat
-                            if ((noMismatches / microSat.length()*100) >= mismatchPerc){
+                            if (currMismatchPerc > mismatchPerc) {
                                 // go back nucleotide positions as not adding to microsat
-                                nucleotidePos = endPos ;
+                                //nucleotidePos = endPos ;
                                 break;
                             }
 
                         }
-                        if ((noMismatches / microSat.length()*100) >= mismatchPerc){break;}
+                        if ( currMismatchPerc > mismatchPerc) { break; }
                     }
 
-                    // if the microsat length is empty found pos of the microsat the threshold needs to be increase
-                    if (microSat.empty()) {
-                        lenThreshold++;
-                        microSat = firstRepeat;
-                    }
-                        // adds the second repeat to the microsat string
-                    else{
                         microSat += secondRepeat;
                         lenThreshold++;
-                    }
+
+
+
+
 
 
                     // assigned to the end of the second substring
@@ -146,7 +153,7 @@ public:
                     // two microsatellites are next to each other
                     firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
                     secondRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
-                    compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
+                    //compareAdjRepeats = compareRepeats(firstRepeat, secondRepeat);
                 }
 
                 // if repeats meet the threshold output the result
@@ -155,8 +162,12 @@ public:
                     // most common repeat is used due to mismatches in the sequence
                     std::string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
                     addToHashtable(mostCommonRepeat, startPos, endPos);
+                    //nucleotidePos = endPos +1;
                 }
+
+
             }
+
         }
 
         printHashTable();
@@ -180,7 +191,7 @@ public:
         int maxVal = -1;
 
         // counts the number of that specific repeat and adds them to the hashtable
-        for (int i = 0; i + repeatLen < microsat.length() ; i += repeatLen) {
+        for (int i = 0; i + repeatLen < microsat.length(); i += repeatLen) {
             int initialCount = counter[microsat.substr(i, repeatLen)];
             int currentCount = initialCount + 1;
             counter[microsat.substr(i, repeatLen)] = currentCount;
@@ -202,7 +213,8 @@ public:
      * @param secondRepeat
      * @return bool if the repeats match
      */
-    bool compareRepeats(std::string firstRepeat, std::string secondRepeat) { // both first and second repeat should be the same size
+    bool compareRepeats(std::string firstRepeat,
+                        std::string secondRepeat) { // both first and second repeat should be the same size
         int lenFirstRepeat = int(firstRepeat.length());
         // Goes through the bases in the first repeat
         for (int base = 0; base < lenFirstRepeat; base++) {
@@ -217,8 +229,7 @@ public:
                         // add to penalty score if the value had to be 'replaced' ie. A = N
                         penaltyScore += mismatchPenalty;
                         break;
-                    }
-                    else if (i == mismatches.length() - 1) {
+                    } else if (i == mismatches.length() - 1) {
                         return false;
                     }
                 }
@@ -240,7 +251,7 @@ public:
             hashtable[repeat] = {startPos, endPos, penaltyScore};
         }
 
-        // if microsat has already been found in another position
+            // if microsat has already been found in another position
         else {
             std::vector<int> vec = hashtable[repeat];
             // Updating the vector with additional start and stop positions
@@ -294,7 +305,9 @@ int main() {
     std::cin >> mismatchPerc;
 
     MicrosatFinder microsatFinder(2,1);
+//    std:: cout << microsatFinder.compareRepeats("ATG", "ATG") << "\n";
 
-    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, int(mismatchPerc));
+
+   microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, int(mismatchPerc));
 
 }
