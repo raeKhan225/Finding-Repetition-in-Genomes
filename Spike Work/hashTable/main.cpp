@@ -9,14 +9,23 @@ public:
      * The hashtable key is the pat that is in the microsat
      * the vector stores the start and stop positions of where the micosat with that repeat occurs
      */
-    std::unordered_map<std::string, std::vector<int>> hashtable;
     int penaltyScore = 0;
+    int nomatchPenalty;
+    int mismatchPenalty;
+    std::unordered_map<std::string, std::vector<int>> hashtable;
+
+    // Constructor // CHECK
+    MicrosatFinder(int nomatchPenalty, int mismatchPenalty) {
+        this -> nomatchPenalty = nomatchPenalty; // ie. if the expected val at that pos is C but is actually G
+        this -> mismatchPenalty = mismatchPenalty; //ie. if the expected val at that pos is G but is actually a val in the mismatch table ie. N
+
+    }
 
     /**
      * Mismatch table
      */
     // used sting instead of array because of https://stackoverflow.com/questions/21946447/how-much-performance-difference-when-using-string-vs-char-array
-    std::unordered_map<char, std::string> misMatchTbl = { // should i order values in most to least likeyly??
+    std::unordered_map<char, std::string> misMatchTbl = { // should I order values in most to least likely??
             {'A', "MRDHVWN"},
             {'C', "YSBHVMN"},
             {'G', "RKSBDVN"},
@@ -92,10 +101,15 @@ public:
                     if (not compareAdjRepeats and not microSat.empty()) {
                         // compares each position in each repeat to see how far the repeats don't match
                         for (int i = 0; i < lenOfRepeats; i++) {
-                            if (firstRepeat[i] != secondRepeat[i]) { noMismatches++; }
-                            // if adding part of a repeat breaks the threshold dont add the repeat to the microsat
+                            if (firstRepeat[i] != secondRepeat[i]) {
+                            //if (not compareRepeats(std::to_string(firstRepeat[i]), std::to_string(secondRepeat[i]))) {
+                                //increase penalty score for each mismatch by 2
+                                penaltyScore += nomatchPenalty;
+                                noMismatches++;
+                            }
+                            // if adding part of a repeat breaks the threshold don't add the repeat to the microsat
                             if ((noMismatches / microSat.length()*100) >= mismatchPerc){
-                                // go back nuclotide positions as not adding to microsat
+                                // go back nucleotide positions as not adding to microsat
                                 nucleotidePos = endPos ;
                                 break;
                             }
@@ -119,7 +133,7 @@ public:
                     // assigned to the end of the second substring
                     endPos = nucleotidePos + lenOfRepeats - 1;
 
-                    // break out of loop if the rest of sequence is not long enough for another comparision
+                    // break out of loop if the rest of sequence is not long enough for another comparison
                     if (endPos + lenOfRepeats >= lenOfSequence) {
                         break;
                     }
@@ -128,7 +142,7 @@ public:
                     nucleotidePos += lenOfRepeats;
                     //if (nucleotidePos + lenOfRepeats > lenOfSequence){break;}
 
-                    // need to make it find the most common repeat in the microssatellite in case
+                    // need to make it find the most common repeat in the microsatellite in case
                     // two microsatellites are next to each other
                     firstRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
                     secondRepeat = sequence.substr(nucleotidePos, lenOfRepeats);
@@ -196,9 +210,14 @@ public:
             if (firstRepeat[base] == secondRepeat[base]) {
                 continue;
             } else {
+                // check if bases are comparative ie. A = N
                 std::string mismatches = misMatchTbl[firstRepeat[base]];
                 for (int i = 0; i < mismatches.length(); i++) {
-                    if (secondRepeat[base] == mismatches[i]) { break; }
+                    if (secondRepeat[base] == mismatches[i]) {
+                        // add to penalty score if the value had to be 'replaced' ie. A = N
+                        penaltyScore += mismatchPenalty;
+                        break;
+                    }
                     else if (i == mismatches.length() - 1) {
                         return false;
                     }
@@ -218,7 +237,7 @@ public:
 
         // If repeat is not in hashtable - if micosat hasn't been found already
         if (hashtable.find(repeat) == hashtable.end()) {
-            hashtable[repeat] = {startPos, endPos};
+            hashtable[repeat] = {startPos, endPos, penaltyScore};
         }
 
         // if microsat has already been found in another position
@@ -227,6 +246,7 @@ public:
             // Updating the vector with additional start and stop positions
             vec.push_back(startPos);
             vec.push_back(endPos);
+            vec.push_back(penaltyScore);
             hashtable[repeat] = vec;
         }
     }
@@ -240,7 +260,7 @@ public:
         std::cout << "HASHTABLE" << std::endl;
         for (auto &[key, vec]: hashtable) {
             std::cout << "Key: " << key << "    " << std::endl;
-            std::cout << "Start and end positions: ";
+            std::cout << "Start pos, end pos and penalty score: ";
             for (int i: vec) {
                 std::cout << i << "  ";
             }
@@ -273,7 +293,7 @@ int main() {
     std::cout << "Enter mismatches percentage allowed: ";
     std::cin >> mismatchPerc;
 
-    MicrosatFinder microsatFinder;
+    MicrosatFinder microsatFinder(2,1);
 
     microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, int(mismatchPerc));
 
