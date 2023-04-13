@@ -6,7 +6,7 @@ class Job:
     def uploadjob(self, email):
         job = {
             "_id": "",
-            "email": email,
+            "email": "",
             "project_title": "",
             "min_Kmer_length": "",
             "max_Kmer_length": "",
