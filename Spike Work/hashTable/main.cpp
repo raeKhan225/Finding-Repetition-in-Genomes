@@ -70,7 +70,7 @@ public:
         for (int lenOfRepeats = minLenRepeats; lenOfRepeats <= maxLenRepeats; lenOfRepeats++) {
 
             // Going through all bases in the sequence 0 indexed, as microsat can start from any position
-            for (int nucleotidePos = 0; nucleotidePos < lenOfSequence; nucleotidePos++) {
+            for (int nucleotidePos = 0; nucleotidePos+(lenOfRepeats*2) < lenOfSequence; nucleotidePos++) {
                 // Check if it's the end of the sequence - will cut off the end of a sequence
                 if (nucleotidePos + lenOfRepeats >= lenOfSequence) { break; }
 
@@ -173,7 +173,7 @@ public:
         std::unordered_map<std::string, int> counter;
         std::string mostCommonRepeat;
         // maxVal keeps track of the maximum value in the microsat
-        int maxVal = -1;
+        int maxVal = 0;
 
         // counts the number of that specific repeat and adds them to the hashtable
         for (int i = 0; i + repeatLen < microsat.length(); i += repeatLen) {
