@@ -4,10 +4,7 @@
 {% block content %}
 <nav class="navbar-expand-lg navbar-dark" style="background-color: black">
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+
     <div class="collapse navbar-collapse font-weight-light" id="navbarNavAltMarkup">
         <div class="navbar-nav">
             <a class="nav-item active nav-link " href="/">Home <span class="sr-only">(current)</span></a>
@@ -31,11 +28,12 @@
         Graph choice description
     </p>
 
-    <form class="font-weight-light" action="/confirm/" method="POST" enctype="multipart/form-data">
+    <form name="upload_confirm_form" class="font-weight-light " >
         <div class="form-group">
             <label for="inputEmail">Email address</label>
             <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter email" required>
         </div>
+
         <div class="form-group">
             <label for="projectTitle">Project Title</label>
             <input type="text" class="form-control" id="projectTitle" name="projectTitle"
@@ -46,7 +44,7 @@
             <label for="minKmerLength">Min K-mer Length</label>
             <select id="minKmerLength" class="form-control" name="minKmerLength" required>
                 <option selected value="">Select size</option>
-                <option value="">2</option>
+                <option 2>2</option>
                 <option>3</option>
                 <option>4</option>
                 <option>5</option>
@@ -92,10 +90,12 @@
             <label for="fastaFile">Upload FASTA file</label>
             <input type="file" class="form-control-file font-weight-light" id="fastaFile" name="fastaFile" required>
         </div>
+
         <p class="error error--hidden">
-        <button type="submit" class="btn btn-secondary btn-lg btn-block font-weight-light"
-                style="background-color: black">Submit
-        </button>
+
+        <input type="submit" value="Submit" class="btn btn-secondary btn-lg btn-block font-weight-light"
+                style="background-color: black" >
+
     </form>
 
 

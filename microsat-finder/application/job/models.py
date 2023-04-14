@@ -1,18 +1,24 @@
-from flask import Flask, jsonify
-from application import db
+from flask import jsonify, request
 import uuid
+import datetime
+from application import db
+
 
 class Job:
-    def uploadjob(self, email):
+    def uploadjob(self):
+        # Create job object
         job = {
-            "_id": "",
-            "email": "",
-            "project_title": "",
-            "min_Kmer_length": "",
-            "max_Kmer_length": "",
-            "min_microsat_length": "",
-            "graph_choice": "",
-            "fasta_file": ""
+            "_id": uuid.uuid4().hex,
+            "email": request.form.get('inputEmail'),
+            "project_title": request.form.get('projectTitle'),
+            "min_Kmer_length": request.form.get('minKmerLength'),
+            "max_Kmer_length": request.form.get('maxKmerLength'),
+            "min_microsat_length": request.form.get('minMicrosatLength'),
+            "graph_choice": request.form.get('graphType'),
+            "fasta_file": request.form.get('fastaFile'),
+            "date_created": datetime.datetime
         }
+
+        db.jobs.insert_one(job)
 
         return jsonify(job), 200

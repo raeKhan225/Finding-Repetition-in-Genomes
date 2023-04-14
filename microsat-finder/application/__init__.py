@@ -1,8 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask
 import pymongo
 
 app = Flask(__name__)
-# Database
-client = pymongo.MongoClient('localhost', 27017)
-db = client.user_login_system_test
 
+# Database
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client.job_upload
