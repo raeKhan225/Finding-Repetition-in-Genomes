@@ -15,8 +15,8 @@ class Job:
             "max_Kmer_length": request.form.get('maxKmerLength'),
             "min_microsat_length": request.form.get('minMicrosatLength'),
             "graph_choice": request.form.get('graphType'),
-            "fasta_file": request.form.get('fastaFile'),
-            "date_created": datetime.datetime
+            "fasta_file": request.form.get('fastaFile')
+
         }
 
         db.jobs.insert_one(job)

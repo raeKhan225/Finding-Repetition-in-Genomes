@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from application import app
 from application.job.models import Job
-from werkzeug.utils import secure_filename
-
-
 
 @app.route('/upload/')
 def upload_fasta_file():
