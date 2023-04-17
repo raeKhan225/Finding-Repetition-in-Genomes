@@ -1,7 +1,9 @@
 from flask import jsonify, request
+import smtplib
+from email.mime.text import MIMEText
 import uuid
 from datetime import datetime
-from application import db
+from application import db, col
 
 
 class Job:
@@ -25,7 +27,32 @@ class Job:
 
         return jsonify("Success"), 200
 
-    def getjobs(self):
-        email = {"email": request.form.get('inputEmail')}
-        result = db.find(email)
-        jsonify(result)
+    def getjobsfromdb(self):
+        email = request.form.get('inputcurrjobsEmail')
+        print(email)
+        result = col.find({"email": email})
+        result_list = list(result)
+
+        print(result_list)  # print the results to the console
+
+        # create message object instance
+        message = MIMEText(str(result_list))
+        message['From'] = 'rak12@aber.ac.uk'
+        message['To'] = 'tob32@aber.ac.uk'
+        message['Subject'] = 'Results for your job search'
+
+        smtp_conn = smtplib.SMTP('smtp.aber.ac.uk', 587)
+        smtp_conn.ehlo()
+        smtp_conn.starttls()
+
+        # Log in to the server
+        smtp_conn.login('rak12', '')
+
+
+
+        # convert message to string and send
+        smtp_conn.sendmail('rak12@aber.ac.uk', 'tob32@aber.ac.uk', message.as_string())
+
+        # terminate SMTP session
+        smtp_conn.quit()
+        return jsonify(result_list), 200

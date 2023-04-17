@@ -24,7 +24,7 @@
             View Current Jobs
         </button>
 
-        <div class="modal show" style="block" id="current-jobs-modal" tabindex="-1" role="dialog">
+        <div class="modal" style="block" id="current-jobs-modal" tabindex="-1" role="dialog">
 
             <div class="modal-dialog">
 
@@ -41,8 +41,8 @@
                             jobs associated with the entered email address. </p>
                         <form name="view_current_jobs" method="POST">
                             <div class="form-group">
-                                <input type="email" class="form-control" id="inputEmail"
-                                       aria-describedby="emailHelp" placeholder="Enter email">
+                                <input type="email" name="inputcurrjobsEmail" class="form-control" id="inputcurrjobsEmail"
+                                        placeholder="Enter email">
                             </div>
                             <input type="button" onclick="close_modal()" class="btn btn-secondary " value="close"/>
                             <input type="submit" class="btn btn-dark" value="Submit"/>

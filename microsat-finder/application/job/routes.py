@@ -13,6 +13,8 @@ def upload_file():
     return Job().uploadjob()
 
 
-@app.route("/view_current_job/", methods=['POST'])
+@app.route("/view_current_jobs/", methods=['POST'])
 def get_current_jobs():
-    return Job().getjobs()
+
+    return Job().getjobsfromdb()
+

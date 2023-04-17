@@ -33,31 +33,27 @@ function close_modal(){
     document.getElementById("current-jobs-modal").style.display = "none" ;
 };
 
-/*$("#current-jobs-btn").click(function(e){
-    $("#current-jobs-modal").modal('show');
-});*/
 
-$("form[name=view_current_jobs").submit(function(e) {
+$(document).on("submit", "form[name=view_current_jobs]", function(e) {
+    var $form = $(this);
+    var data = $form.serialize();
 
-  var $form = $(this);
-  var $email = $form.serialize();
+    $.ajax({
+        url: "/view_current_jobs/",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function(resp) {
+            console.log(resp);
+            close_modal(); // Call the close_modal function after 1 second
+        },
 
-  $.ajax({
-    url: "/view_current_job/",
-    type: "POST",
-    data: email,
-    dataType: "json",
-    success: function(resp) {
-      console.log(resp);
-      // Replace with success message
-      window.location.href = "/upload";
+        error: function(resp) {
+            console.log(resp);
+        }
+    });
 
-    },
-    error: function(resp) {
-     console.log(resp);
-    }
-  });
-
-  e.preventDefault();
+    // Prevent the form from submitting normally
+    e.preventDefault();
 });
 
