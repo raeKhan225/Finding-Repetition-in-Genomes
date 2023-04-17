@@ -18,7 +18,7 @@
 </nav>
 
 <div class="container py-4">
-    <h1>Upload FASTA File</h1>
+    <h5>Upload FASTA File</h5>
     <p class="font-weight-light "> Upload a FASTA file, the file formats that are accepted are .fa and .fast files.
         Email description,
         Project title description,
@@ -29,6 +29,7 @@
     </p>
 
     <form name="upload_confirm_form" class="font-weight-light " >
+<!--        <p class="success hidden">SUCCESS</p>-->
         <div class="form-group">
             <label for="inputEmail">Email address</label>
             <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter email" required>
@@ -92,6 +93,7 @@
         </div>
 
         <p class="error error--hidden">
+
 
         <input type="submit" value="Submit" class="btn btn-secondary btn-lg btn-block font-weight-light"
                 style="background-color: black" >
