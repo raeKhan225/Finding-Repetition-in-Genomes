@@ -7,11 +7,9 @@
 
     <div class="collapse navbar-collapse font-weight-light" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item active nav-link " href="/">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item active nav-link " href="/upload/">Upload FASTA file</a>
+            <a class="nav-item active nav-link " href="/">Home <span class="sr-only"></span></a>
             <a class="nav-item  active nav-link" href="https://github.com/raeKhan225/Finding-Repetition-in-Genomes">View
                 Documentation</a>
-            <a class="nav-item active nav-link" href="/">Get Progress of Current Jobs</a>
 
         </div>
     </div>
@@ -28,8 +26,8 @@
         Graph choice description
     </p>
 
-    <form name="upload_confirm_form" class="font-weight-light " >
-<!--        <p class="success hidden">SUCCESS</p>-->
+    <form  name="upload_confirm_form" id="upload_confirm_form"class="font-weight-light " enctype="multipart/form-data">
+
         <div class="form-group">
             <label for="inputEmail">Email address</label>
             <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter email" required>
@@ -89,7 +87,7 @@
         </div>
         <div class="form-group">
             <label for="fastaFile">Upload FASTA file</label>
-            <input type="file" class="form-control-file font-weight-light" id="fastaFile" name="fastaFile" required>
+            <input type="file" class=" font-weight-light" id="fastaFile" name="fastaFile" required>
         </div>
 
         <p class="error error--hidden">

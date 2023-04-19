@@ -8,13 +8,12 @@ def upload_fasta_file():
     return render_template("upload-FASTA-file.html")
 
 
-@app.route("/upload/file/", methods=['POST'])
+@app.route("/upload_file/", methods=['POST'])
 def upload_file():
     return Job().uploadjob()
 
 
 @app.route("/view_current_jobs/", methods=['POST'])
 def get_current_jobs():
-
     return Job().getjobsfromdb()
 

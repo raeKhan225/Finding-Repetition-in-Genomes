@@ -1,59 +1,72 @@
-$("form[name=upload_confirm_form").submit(function(e) {
-
-  var $form = $(this);
-  var $error = $form.find(".error");
-  var $success = $form.find(".success");
-  var data = $form.serialize();
-
-  $.ajax({
-    url: "/upload/file/",
-    type: "POST",
-    data: data,
-    dataType: "json",
-    success: function(resp) {
-      console.log(resp);
-      // Replace with success message
-      window.location.href = "/";
-
-    },
-    error: function(resp) {
-     console.log(resp);
-    }
-  });
-
-  e.preventDefault();
-});
-
-function current_jobs_func() {
-
-    document.getElementById("current-jobs-modal").style.display = "block" ;
-};
-
-function close_modal(){
-    document.getElementById("current-jobs-modal").style.display = "none" ;
-};
-
-
-$(document).on("submit", "form[name=view_current_jobs]", function(e) {
+document.getElementById("upload_confirm_form").addEventListener("submit", function(e) {
     var $form = $(this);
-    var data = $form.serialize();
+    var form_data = new FormData($form[0]);
+    var file_input = document.getElementById("fastaFile");
+    form_data.append("fastaFile", file_input.files[0]);
 
     $.ajax({
-        url: "/view_current_jobs/",
+        url: "/upload_file/",
+        type: "POST",
+        data: form_data,
+        cache: false,
+        //dataType: "multi",
+        contentType: false,
+        processData: false,
+
+        success: function(resp) {
+          console.log(resp);
+          // Replace with success message
+          console.log("Redirecting to /");
+          window.location.href = "/";
+
+        },
+        error: function(resp) {
+          console.log( resp);
+          alert("Error: " + resp)
+       }
+    });
+    e.preventDefault();    //stop form from submitting
+});
+
+function get_current_jobs_form() {
+
+    var $form = $(this);
+    var data = new FormData($form[0]);
+
+    $.ajax({
+        url: "/upload_file/",
         type: "POST",
         data: data,
-        dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false,
+
         success: function(resp) {
-            console.log(resp);
-            close_modal(); // Call the close_modal function after 1 second
+          console.log(resp);
+          // Replace with success message
+          console.log("Redirecting to /");
+          window.location.href = "/";
+
         },
-
         error: function(resp) {
-            console.log(resp);
-        }
+          console.log( resp);
+          alert("Error: " + resp)
+       }
     });
+    e.preventDefault();    //stop form from submitting
 
-    // Prevent the form from submitting normally
-    e.preventDefault();
-});
+};
+
+
+function current_jobs_func() {
+  document.getElementById("current-jobs-modal").style.display = "block";
+};
+
+function close_modal() {
+  document.getElementById("current-jobs-modal").style.display = "none";
+};
+
+
+
+
 
