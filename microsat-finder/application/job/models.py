@@ -5,7 +5,8 @@ from email.mime.text import MIMEText
 
 import gridfs
 import pymongo
-from flask import jsonify, request
+from bson import json_util
+from flask import jsonify, request, json
 
 from application import db, col
 
@@ -43,6 +44,7 @@ class Job:
         return jsonify("success"), 200
 
     def getjobsfromdb(self):
+        global id
         print("HERE")
         # Get email from pop-up
         email = request.form.get('inputcurrjobsEmail')
@@ -85,4 +87,4 @@ class Job:
         # terminate SMTP session
         smtp_conn.quit()
 
-        return jsonify(result_list), 200
+        return json.loads(json_util.dumps(result_list)), 200

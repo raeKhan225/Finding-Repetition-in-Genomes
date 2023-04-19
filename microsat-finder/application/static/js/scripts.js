@@ -32,34 +32,34 @@ upload_confirm_form_listener.addEventListener("submit", function(e) {
 });
 };
 
-var view_current_jobs_listener = document.getElementById("upload_confirm_form");
+var view_current_jobs_listener = document.getElementById("view_current_jobs");
+if (view_current_jobs_listener) {
 
-if (view_current_jobs_listener){
-document.getElementById("upload_confirm_form").addEventListener("submit", function(e) {
-  var $form = $(document.getElementById("view_current_jobs"));
-  var $email = $form.serialize();
-  console.log($email);
-  $.ajax({
-    url: "/upload_file/",
-    type: "POST",
-    data: email,
-    dataType: "json",
-    success: function(resp) {
+  document.getElementById("view_current_jobs").addEventListener("submit", function(e) {
+    var $form = $(document.getElementById("view_current_jobs"));
+    var $email = $form.serialize();
+    console.log("HERE");
+    $.ajax({
+      url: "/view_current_jobs/",
+      type: "POST",
+      data: $email,
+      dataType: "json",
+      error: function(resp) {
+        console.log(resp);
+        alert("Error: " + resp);
+      },
+      success: function(resp) {
+      e.preventDefault();
       console.log(resp);
       // Replace with success message
       console.log("Redirecting to /");
       window.location.href = "/";
-      // Call the current_jobs_func() function
-      current_jobs_func();
-    },
-    error: function(resp) {
-      console.log(resp);
-      alert("Error: " + resp);
-    }
+      }
+    });
+    e.preventDefault(); // stop form from submitting
   });
-  e.preventDefault(); // stop form from submitting
-});
 };
+
 
 
 
