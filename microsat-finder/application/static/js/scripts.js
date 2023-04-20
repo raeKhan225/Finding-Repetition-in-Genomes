@@ -1,5 +1,6 @@
+// Finds upload form element
 var upload_confirm_form_listener = document.getElementById("upload_confirm_form");
-
+// Adds a listener if there to prevent adding null to listener
 if (upload_confirm_form_listener){
 upload_confirm_form_listener.addEventListener("submit", function(e) {
     var $form = $(this);
@@ -15,30 +16,29 @@ upload_confirm_form_listener.addEventListener("submit", function(e) {
         //dataType: "multi",
         contentType: false,
         processData: false,
-
         success: function(resp) {
           console.log(resp);
           // Replace with success message
-          console.log("Redirecting to /");
-          window.location.href = "/";
+          document.getElementById("showResponseArea").removeAttribute("hidden");
+          document.getElementById("upload_confirm_form").reset();
 
         },
         error: function(resp) {
           console.log( resp);
-          alert("Error: " + resp)
+          alert("Error: the file upload failed, please try again");
        }
     });
-    e.preventDefault();    //stop form from submitting
+    //stop form from submitting
+    e.preventDefault();
 });
 };
 
 var view_current_jobs_listener = document.getElementById("view_current_jobs");
 if (view_current_jobs_listener) {
-
   document.getElementById("view_current_jobs").addEventListener("submit", function(e) {
     var $form = $(document.getElementById("view_current_jobs"));
     var $email = $form.serialize();
-    console.log("HERE");
+
     $.ajax({
       url: "/view_current_jobs/",
       type: "POST",
@@ -46,27 +46,31 @@ if (view_current_jobs_listener) {
       dataType: "json",
       error: function(resp) {
         console.log(resp);
-        alert("Error: " + resp);
+        close_modal();
+        alert("Error: your jobs can't be retrieved, please try again");
       },
       success: function(resp) {
-      e.preventDefault();
-      console.log(resp);
-      // Replace with success message
-      console.log("Redirecting to /");
-      window.location.href = "/";
+          console.log(resp);
+          // Replace with success message
+          console.log("Redirecting to /");
+          close_modal();
+          document.getElementById("showResponseArea_curr_jobs").removeAttribute("hidden");
       }
     });
-    e.preventDefault(); // stop form from submitting
+    // stop form from submitting when opened
+    e.preventDefault();
+    // stop form from submitting twice when submit button is pressed
+    e.stopImmediatePropagation();
   });
 };
 
 
-
-
+// Opens pop-up block
 function current_jobs_func() {
   document.getElementById("current-jobs-modal").style.display = "block";
 };
 
+// Closes pop-up block
 function close_modal() {
   document.getElementById("current-jobs-modal").style.display = "none";
 };
