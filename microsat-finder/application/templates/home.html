@@ -1,17 +1,19 @@
 {% extends "base.html" %}
+
 {% block title %} Home page {% endblock %}
-
 {% block content %}
-
 <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center"
      xmlns="http://www.w3.org/1999/html">
+
+    <!-- Hidden until current job pop up is submitted -->
      <div id="showResponseArea_curr_jobs" class="alert" style="color:green" hidden>
         <span>
             <strong>Success !</strong>You should receive an email shortly with your current jobs.
         </span>
     </div>
-    <h1>Microsatellite Finder</h1>
 
+    <!-- Description   -->
+    <h1>Microsatellite Finder</h1>
     <p class="container font-weight-light "> Microsatellites (also known as Simple Sequence Repeats (SSRs)) are
         repetitive sections of DNA that repeat throughout the genome. Microsatellites are important for bioinformatics
         because they can be used to advance our understanding of biological systems, genetic diversity, and evolutionary
@@ -19,19 +21,22 @@
         populations, including those that may be important for human health or that are associated with diseases. Most
         commonly, Microsatellites are considered to be between 2 and 7 bases long.</p>
 
+    <!-- Buttons on home page -->
     <div class="button-box">
 
+        <!-- Upload FASTA file button -->
         <a class="btn btn-dark font-weight-light" href="/upload" role="button" style="background-color: black"
-           aria-pressed="true">Upload FASTA file</a>
+           aria-pressed="true">Upload FASTA file
+        </a>
 
+        <!-- Current jobs button which opens the modal-->
         <button type="button" onclick="current_jobs_func()" id="current-jobs-btn"class="btn btn-info btn-dark" style="background-color: black">
             View Current Jobs
         </button>
 
-        <div class="modal" style="block" id="current-jobs-modal"  >
-
+        <!-- Modal for current jobs -->
+        <div class="modal" style="block" id="current-jobs-modal" >
             <div class="modal-dialog">
-
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -44,6 +49,7 @@
                             the current
                             jobs associated with the entered email address. </p>
 
+                        <!-- Form for current job email -->
                         <form  name="view_current_jobs" id="view_current_jobs" >
                             <div class="form-group">
                                 <input type="email" name="inputcurrjobsEmail" class="form-control" id="inputcurrjobsEmail"
@@ -52,23 +58,23 @@
                             <input type="button" onclick="close_modal()" class="btn btn-secondary " value="close"/>
                             <input type="submit" class="btn btn-dark" value="Submit"/>
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>
 
+        <!-- Redirects to github page -->
         <a class="btn btn-dark font-weight-light" href="https://github.com/raeKhan225/Finding-Repetition-in-Genomes"
            role="button" style="background-color: black" aria-pressed="true">View Documentation (GitHub)</a>
     </div>
 
-
+    <!-- Download Link for the microsatellite -->
     <div class="container py-5">
         <h2>Download</h2>
+
+        <!-- Titles -->
         <div class="row">
             <div class="col-sm">
-
             </div>
             <div class="col-sm text-right">
                 size
@@ -77,6 +83,8 @@
                 Date
             </div>
         </div>
+
+        <!-- Values NEED TO CHANGE-->
         <div class="row">
             <div class="col-sm">
                 <a href="https://github.com/raeKhan225/Finding-Repetition-in-Genomes">
@@ -90,11 +98,5 @@
             </div>
         </div>
     </div>
-
-
 </div>
-
-<script src="/static/js/jquery.js"></script>
-<script src="/static/js/scripts.js"></script>
-
 {% endblock %}

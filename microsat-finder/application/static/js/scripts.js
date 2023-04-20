@@ -33,9 +33,12 @@ upload_confirm_form_listener.addEventListener("submit", function(e) {
 });
 };
 
+// Adding another listener for the modal, to get current jobs the user has in the db
 var view_current_jobs_listener = document.getElementById("view_current_jobs");
 if (view_current_jobs_listener) {
   document.getElementById("view_current_jobs").addEventListener("submit", function(e) {
+
+    // Get form data
     var $form = $(document.getElementById("view_current_jobs"));
     var $email = $form.serialize();
 
@@ -44,26 +47,29 @@ if (view_current_jobs_listener) {
       type: "POST",
       data: $email,
       dataType: "json",
+
+      // Error resp
       error: function(resp) {
         console.log(resp);
         close_modal();
         alert("Error: your jobs can't be retrieved, please try again");
       },
+
+      // Success resp
       success: function(resp) {
           console.log(resp);
-          // Replace with success message
-          console.log("Redirecting to /");
           close_modal();
+          // Show success message on home page
           document.getElementById("showResponseArea_curr_jobs").removeAttribute("hidden");
       }
     });
+
     // stop form from submitting when opened
     e.preventDefault();
     // stop form from submitting twice when submit button is pressed
     e.stopImmediatePropagation();
   });
 };
-
 
 // Opens pop-up block
 function current_jobs_func() {
