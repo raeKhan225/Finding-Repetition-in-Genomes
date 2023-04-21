@@ -143,13 +143,15 @@ if __name__ == "__main__":
 
         # Execute C++ program
         command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
+        print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
 
-        args = [sequence, minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc]
+        proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        output_bytes, _ = proc.communicate(
+            input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
 
-        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        stdout, stderr = p.communicate('\n'.join(args).encode())
-
-        print(stdout)
+        # Decode the output into a string
+        output_str = output_bytes.decode("utf-8")
+        print(output_str)
     # Find which sequence the microsat is in
 
     # Generate GFF3 File

@@ -279,6 +279,7 @@ int main() {
     std::string input;
     std::getline(std::cin, input);
     std::istringstream iss(input);
+
     std::string sequence;
     int minLenMicrosat, minLenRepeats, maxLenRepeats;
     float mismatchPerc;
