@@ -2,6 +2,9 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <sstream>
+
+
 
 class MicrosatFinder {
 public:
@@ -12,7 +15,7 @@ public:
     int penaltyScore = 0;
     int nomatchPenalty;
     int mismatchPenalty;
-    std::unordered_map<std::string, std::vector<int>> hashtable;
+    std::unordered_map<std::string, std::vector<int> > hashtable;
 
     //Constructor // CHECK
     MicrosatFinder(int nomatchPenalty, int mismatchPenalty) {
@@ -264,35 +267,34 @@ public:
         }
     }
 
+    [[nodiscard]] std::unordered_map<std::string, std::vector<int>> getHashTable() const{
+        return hashtable;
+    }
+
 };
 
+//sequence, minLenMicrosat, minLenRepeats, maxLenRepeats,mismatchPerc
 int main() {
-    // A repeat is the repeat in a micosat i.e. ATGATGATGATGATGATG the repeat = ATG
+
+    std::string input;
+    std::getline(std::cin, input);
+    std::istringstream iss(input);
     std::string sequence;
-    int minLenRepeats;
-    int maxLenRepeats;
-    int minLenMicrosat;
+    int minLenMicrosat, minLenRepeats, maxLenRepeats;
     float mismatchPerc;
+    iss >> sequence >> minLenMicrosat >> minLenRepeats >> maxLenRepeats >> mismatchPerc;
 
-    std::cout << "Enter the sequence: ";
-    std::cin >> sequence;
+    // Initialize MicrosatFinder object
+    MicrosatFinder microsatFinder(2, 1);
 
-    std::cout << "Enter the minimum length of the Microsat: ";
-    std::cin >> minLenMicrosat;
-
-    std::cout << "Enter the minimum length of repeats: ";
-    std::cin >> minLenRepeats;
-
-    std::cout << "Enter the maximum length of repeats: ";
-    std::cin >> maxLenRepeats;
-
-    std::cout << "Enter mismatches percentage allowed: ";
-    std::cin >> mismatchPerc;
-
-    MicrosatFinder microsatFinder(2,1);
-//    std:: cout << microsatFinder.compareRepeats("ATG", "ATG") << "\n";
-
-
-   microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, int(mismatchPerc));
+    // Find microsatellites and print results to standard output
+    microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
+    for (const auto& [key, val] : microsatFinder.getHashTable()) {
+        std::cout << key << ": ";
+        for (const auto& v : val) {
+            std::cout << v << " ";
+        }
+        std::cout << "\n";
+    }
 
 }

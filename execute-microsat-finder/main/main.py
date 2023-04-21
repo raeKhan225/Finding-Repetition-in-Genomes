@@ -8,6 +8,7 @@ import pymongo as pymongo
 # Database
 from bson import ObjectId
 from gridfs import GridFS
+from pymongo import MongoClient
 
 client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client["microsat_finder_jobs"]
@@ -112,47 +113,43 @@ def sendEmail(email, message_content):
     # Terminate SMTP session
     smtp_conn.quit()
 
-def  whole_sequence():
-
 
 if __name__ == "__main__":
-    # Order db from oldest to newest
-    sorted_db = col.find({}).sort('date', pymongo.DESCENDING)
+        # Order db from oldest to newest
+        sorted_db = col.find({}).sort('date', pymongo.DESCENDING)
 
-    # Get oldest job details
-    job = sorted_db[0]
-    print(job)
-    minLenMicrosat = job.get('min_microsat_length')
-    minLenRepeats = job.get('min_Kmer_length')
-    maxLenRepeats = job.get('max_Kmer_length')
-    mismatchPerc = job.get()
+        # Get oldest job details
+        job = sorted_db[0]
+        minLenMicrosat = job.get('min_microsat_length')
+        minLenRepeats = job.get('min_Kmer_length')
+        maxLenRepeats = job.get('max_Kmer_length')
+        mismatchPerc = job.get('perc_mismatch')
 
-    # Read FASTA file from db
-    # Get file from job
-    fs = GridFS(db)
+        # Read FASTA file from db
+        # Get file from job
+        fs = GridFS(db)
 
-    # Find the file's document by _id
-    file_id = job.get('fasta_file')
-    file_doc = db.fs.files.find_one({"_id": file_id})
+        # Find the file's document by _id
+        file_id = job.get('fasta_file')
+        file_doc = db.fs.files.find_one({"_id": file_id})
 
-    # Retrieve the file's data by reading its chunks
-    chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
-    data = b"".join([chunk["data"] for chunk in chunks])
+        # Retrieve the file's data by reading its chunks
+        chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
+        data = b"".join([chunk["data"] for chunk in chunks])
 
-    # Print the file's contents
-    file_content = data.decode("utf-8")
-    sequence = read_fasta_file(file_content)
+        # Print the file's contents
+        file_content = data.decode("utf-8")
+        sequence = read_fasta_file(file_content)
 
-    # Execute C++ program
-    command = './finding_microsat_perc_threshold'
+        # Execute C++ program
+        command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
 
-    input_json_for_c =  json.dumps({'sequence':sequence, 'minLenMicrosat': minLenMicrosat,'minLenRepeats': minLenRepeats, 'maxLenRepeats' : maxLenRepeats,'mismatchPerc' : mismatchPerc})
+        args = [sequence, minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc]
 
-    output = subprocess.check_output([command, input_json_for_c])
+        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout, stderr = p.communicate('\n'.join(args).encode())
 
-    output_str = output.decode('utf-8')
-    output_json = json.loads(output_str)
-
+        print(stdout)
     # Find which sequence the microsat is in
 
     # Generate GFF3 File
