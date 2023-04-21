@@ -22,7 +22,7 @@ class Job:
             "min_Kmer_length": request.form.get('minKmerLength'),
             "max_Kmer_length": request.form.get('maxKmerLength'),
             "min_microsat_length": request.form.get('minMicrosatLength'),
-            "graph_choice": request.form.get('graphType'),
+            "perc_mismatch": request.form.get('percMismatch'),
             "fasta_file": "null",
             "date": datetime.today().replace(microsecond=0)
         }

@@ -1,4 +1,6 @@
+import json
 import smtplib
+import subprocess
 from email.mime.text import MIMEText
 
 import pymongo as pymongo
@@ -11,35 +13,31 @@ client = pymongo.MongoClient('127.0.0.1', 27017)
 db = client["microsat_finder_jobs"]
 col = db["jobs"]
 
+scaffold_dict = {}
+
 
 # Read FASTA file
-def read_fasta_file(file):
-    seq = ""
-    key = ""
-    fasta_dict = {}
-    #fasta_file_lines = open(file, "r").readlines()
+def read_fasta_file(filecontent):
+    # Split by > to get individual scaffolds
+    scaffolds = filecontent.split(">")  # Error with seq at the begining
     whole_sequence = ""
 
-    # Tries to read FASTA file
-    try:
-        # Add FASTA file to dict
-        for line in file:
-            if line.startswith(">"):
-                seq = ""
-                key = line[1:].strip()
-            else:
-                seq += line.strip()
+    for scaffold in scaffolds:
+        # If not empty
+        if scaffold != '':
+            # Split scaffold by first instance on \n to get the scaffold name and value seperate
+            split_scaffold = scaffold.split("\n", 1)
 
-            # replacing old seq with updated
-            fasta_dict[key] = seq
-        # return fasta_dict
+            # Add to dictionary with actual sting and size and get rid of \t, \n and spaces
+            key = split_scaffold[0].replace('\n', '').replace('\t', '').strip()
+            value = split_scaffold[1].replace('\n', '').replace('\t', '').strip()
 
-    except Exception as e:
-        print("Error when reading FASTA file : " + str(e))
+            scaffold_dict[key] = [value, len(value)]
 
-    for key, value in fasta_dict.items():
-        whole_sequence += value
+            # Add to whole sequence
+            whole_sequence += value
 
+    # Strip of any space and \n char
     return whole_sequence
 
 
@@ -114,6 +112,8 @@ def sendEmail(email, message_content):
     # Terminate SMTP session
     smtp_conn.quit()
 
+def  whole_sequence():
+
 
 if __name__ == "__main__":
     # Order db from oldest to newest
@@ -122,6 +122,10 @@ if __name__ == "__main__":
     # Get oldest job details
     job = sorted_db[0]
     print(job)
+    minLenMicrosat = job.get('min_microsat_length')
+    minLenRepeats = job.get('min_Kmer_length')
+    maxLenRepeats = job.get('max_Kmer_length')
+    mismatchPerc = job.get()
 
     # Read FASTA file from db
     # Get file from job
@@ -136,9 +140,18 @@ if __name__ == "__main__":
     data = b"".join([chunk["data"] for chunk in chunks])
 
     # Print the file's contents
-    print(read_fasta_file(data.decode("utf-8"))) # Error with seq at the begining
+    file_content = data.decode("utf-8")
+    sequence = read_fasta_file(file_content)
 
     # Execute C++ program
+    command = './finding_microsat_perc_threshold'
+
+    input_json_for_c =  json.dumps({'sequence':sequence, 'minLenMicrosat': minLenMicrosat,'minLenRepeats': minLenRepeats, 'maxLenRepeats' : maxLenRepeats,'mismatchPerc' : mismatchPerc})
+
+    output = subprocess.check_output([command, input_json_for_c])
+
+    output_str = output.decode('utf-8')
+    output_json = json.loads(output_str)
 
     # Find which sequence the microsat is in
 
