@@ -50,11 +50,12 @@ class Job:
         result = col.find({"email": email})
 
         # Get all documents sorted by date in descending order
-        cursor = col.find({}).sort('date', pymongo.DESCENDING)
+        wholejoblistInitial = col.find({}).sort('date', pymongo.ASCENDING)
+        wholejoblist = list(wholejoblistInitial)
         result_list = list(result)
 
         # Create message object instance
-        message_content = "Current Jobs with microsatellitefinder:\n"
+        message_content = "\n Current Jobs with microsatellitefinder:\n\n"
 
         # Go through each of the jobs associated with the email
         job_id = "null"
@@ -67,13 +68,15 @@ class Job:
 
             # Get the order which the job is in the database
             queue_order = 1
-            for document in cursor:
+            for document in wholejoblist:
                 if document['_id'] == job_id:
+                    # Add position in queue to email
+                    message_content += "Position in queue: " + str(queue_order) + "\n\n"
                     break
                 queue_order += 1
 
-            # Add position in queue to email
-            message_content += "\n Position in queue: " + str(queue_order) + "\n"
+
+
 
         # Structure email
         message = MIMEText(message_content)

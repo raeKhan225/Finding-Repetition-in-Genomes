@@ -116,7 +116,7 @@ def sendEmail(email, message_content):
 
 if __name__ == "__main__":
         # Order db from oldest to newest
-        sorted_db = col.find({}).sort('date', pymongo.DESCENDING)
+        sorted_db = col.find({}).sort('date')
 
         # Get oldest job details
         job = sorted_db[0]
@@ -124,6 +124,7 @@ if __name__ == "__main__":
         minLenRepeats = job.get('min_Kmer_length')
         maxLenRepeats = job.get('max_Kmer_length')
         mismatchPerc = job.get('perc_mismatch')
+        projectTitle = job.get('project_title')
 
         # Read FASTA file from db
         # Get file from job
@@ -137,7 +138,6 @@ if __name__ == "__main__":
         chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
         data = b"".join([chunk["data"] for chunk in chunks])
 
-        # Print the file's contents
         file_content = data.decode("utf-8")
         sequence = read_fasta_file(file_content)
 
@@ -145,6 +145,7 @@ if __name__ == "__main__":
         command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
         print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
 
+        #print(sequence)
         proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         output_bytes, _ = proc.communicate(
             input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
