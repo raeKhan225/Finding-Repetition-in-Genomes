@@ -151,14 +151,14 @@ public:
 
                 // if repeats meet the threshold output the result
                 if (lenThreshold >= minLenMicrosat) {
-                    std::cout << "Microsatellite found: " << microSat << "\n";
+                    //UNCOMMENT TO CHECK : std::cout << "Microsatellite found: " << microSat << "\n";
                     // most common repeat is used due to mismatches in the sequence
                     std::string mostCommonRepeat = findMostCommonRepeatInMicoSat(microSat, lenOfRepeats);
                     addToHashtable(mostCommonRepeat, startPos, endPos);
                 }
             }
         }
-        printHashTable();
+        //printHashTable();
     }
 
 
@@ -291,9 +291,9 @@ int main() {
     // Find microsatellites and print results to standard output
     microsatFinder.findMicrosat(sequence, minLenRepeats, maxLenRepeats, minLenMicrosat, mismatchPerc);
     for (const auto& [key, val] : microsatFinder.getHashTable()) {
-        std::cout << key << ": ";
+        std::cout << key << "/";
         for (const auto& v : val) {
-            std::cout << v << " ";
+            std::cout << v << "/";
         }
         std::cout << "\n";
     }

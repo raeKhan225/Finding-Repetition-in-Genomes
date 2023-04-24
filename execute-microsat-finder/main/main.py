@@ -1,6 +1,10 @@
 import json
+import os
 import smtplib
 import subprocess
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import pymongo as pymongo
@@ -33,7 +37,7 @@ def read_fasta_file(filecontent):
             key = split_scaffold[0].replace('\n', '').replace('\t', '').strip()
             value = split_scaffold[1].replace('\n', '').replace('\t', '').strip()
 
-            scaffold_dict[key] = [value, len(value)]
+            scaffold_dict[key] = len(value)
 
             # Add to whole sequence
             whole_sequence += value
@@ -62,7 +66,7 @@ must be tab separated
 
 def createGFF(filename):
     try:
-        f = open(filename + ".gff", "x")
+        f = open(filename + ".gff3", "x")
         f.write("##gff-version 3\n" +
                 "##Microsatellite finder 2023 version 1\n" +
                 "##Author: Raeesah Khan\n")
@@ -77,18 +81,18 @@ def createGFF(filename):
 
 def addtoGFF(filename, features):
     try:
-        f = open(filename + ".gff", "a+")
+        f = open(filename + ".gff3", "a+")
         # tab separated
-        for feature in features:
-            f.write(str(feature["seqid"]) + "\t" +
-                    str(feature["source"]) + "\t" +
-                    str(feature["type"]) + "\t" +
-                    str(feature["start"]) + "\t" +
-                    str(feature["end"]) + "\t" +
-                    str(feature["score"]) + "\t" +
-                    str(feature["strand"]) + "\t" +
-                    str(feature["phase"]) + "\t" +
-                    str(feature["attributes"]) + "\n")
+
+        f.write(features["seqid"] + "\t" +
+                    features["source"] + "\t" +
+                    features["type"] + "\t" +
+                    features["start"] + "\t" +
+                    features["end"] + "\t" +
+                    features["score"] + "\t" +
+                    features["strand"] + "\t" +
+                    features["phase"] + "\t" +
+                    features["attributes"] + "\n")
 
         f.close()
 
@@ -96,8 +100,17 @@ def addtoGFF(filename, features):
         print("Cant read file or file does not exist")
 
 
-def sendEmail(email, message_content):
-    message = MIMEText(message_content)
+# Stat an end pos have to be 1 indexed
+def findSequenceId(start, end):
+    counter = 0
+    for key, vals in scaffold_dict.items():
+        counter += scaffold_dict[key]
+        if start < counter:
+            return key
+
+
+def sendEmail(email, message_content, f):
+    message = MIMEMultipart()
     message['From'] = 'rak12@aber.ac.uk'
     message['To'] = email
     message['Subject'] = 'Completed Job microsatellite finder'
@@ -107,6 +120,16 @@ def sendEmail(email, message_content):
     smtp_conn.ehlo()
     smtp_conn.starttls()
 
+    with open(f, 'rb') as attachment:
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(attachment.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition',
+                        'attachment', filename=f.split("/")[-1])
+        message.attach(part)
+
+    message.attach(MIMEText(message_content))
+
     # Convert message to string and send
     smtp_conn.sendmail('rak12@aber.ac.uk', email, message.as_string())
 
@@ -115,47 +138,81 @@ def sendEmail(email, message_content):
 
 
 if __name__ == "__main__":
-        # Order db from oldest to newest
-        sorted_db = col.find({}).sort('date')
+    # Order db from oldest to newest
+    sorted_db = col.find({}).sort('date')
 
-        # Get oldest job details
-        job = sorted_db[0]
-        minLenMicrosat = job.get('min_microsat_length')
-        minLenRepeats = job.get('min_Kmer_length')
-        maxLenRepeats = job.get('max_Kmer_length')
-        mismatchPerc = job.get('perc_mismatch')
-        projectTitle = job.get('project_title')
+    # Get oldest job details
+    job = sorted_db[0]
+    minLenMicrosat = job.get('min_microsat_length')
+    minLenRepeats = job.get('min_Kmer_length')
+    maxLenRepeats = job.get('max_Kmer_length')
+    mismatchPerc = job.get('perc_mismatch')
+    projectTitle = job.get('project_title')
+    email = job.get('email')
 
-        # Read FASTA file from db
-        # Get file from job
-        fs = GridFS(db)
+    # Read FASTA file from db
+    # Get file from job
+    fs = GridFS(db)
 
-        # Find the file's document by _id
-        file_id = job.get('fasta_file')
-        file_doc = db.fs.files.find_one({"_id": file_id})
+    # Find the file's document by _id
+    file_id = job.get('fasta_file')
+    file_doc = db.fs.files.find_one({"_id": file_id})
 
-        # Retrieve the file's data by reading its chunks
-        chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
-        data = b"".join([chunk["data"] for chunk in chunks])
+    # Retrieve the file's data by reading its chunks
+    chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
+    data = b"".join([chunk["data"] for chunk in chunks])
 
-        file_content = data.decode("utf-8")
-        sequence = read_fasta_file(file_content)
+    file_content = data.decode("utf-8")
+    sequence = read_fasta_file(file_content)
 
-        # Execute C++ program
-        command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
-        print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
+    # Execute C++ program
+    command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
+    # print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
 
-        #print(sequence)
-        proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        output_bytes, _ = proc.communicate(
-            input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
+    # print(sequence)
+    proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    output_bytes, _ = proc.communicate(
+        input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
 
-        # Decode the output into a string
-        output_str = output_bytes.decode("utf-8")
-        print(output_str)
+    # Decode the output into a string
+    output_str = output_bytes.decode("utf-8")
+
     # Find which sequence the microsat is in
+    microsats_start_stop_penalty_vals = output_str.split('\n')
 
+    print(microsats_start_stop_penalty_vals[1])
+    print(scaffold_dict)
     # Generate GFF3 File
+    createGFF(projectTitle)
+
+    for microsat in microsats_start_stop_penalty_vals:
+        # Make ne dict for eatues to be added to gff file
+        features = {"seqid": ".", "source": ".", "type": ".", "start": ".", "end": ".", "score": ".",
+                    "strand": ".", "phase": ".", "attributes": "."}
+        vals = microsat.split('/')
+        features["source"] = "Microsatellite finder"
+        features["type"] = "Microsatellite"
+        features["attributes"] = "Repeat=" + vals[0]
+
+        # 1 to len -2 due to end of vals space and name at the 0th position
+        for v in range(1, len(vals) - 2, 3):
+            # Have to increase start an end poss by 1 due to 1 index of GFF file
+            start  = int(vals[v]) + 1
+            end = int(vals[v + 1]) + 1
+            features["start"] = str(start)
+            features["end"] = str(end)
+            features["score"] = vals[v + 2]
+            features["seqid"] = findSequenceId(start, end)
+            print(features)
+            addtoGFF(projectTitle, features)
+
+    sendEmail(email, "Completed Job, please see attached file fo results of your job. Please Note you results are not saved", projectTitle + ".gff3")
+    os.remove(projectTitle + ".gff3")
+
+
+
+
+
 
     # Send email to user with their GFF3 file attached
 

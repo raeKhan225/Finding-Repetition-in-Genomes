@@ -75,9 +75,6 @@ class Job:
                     break
                 queue_order += 1
 
-
-
-
         # Structure email
         message = MIMEText(message_content)
         message['From'] = 'rak12@aber.ac.uk'
