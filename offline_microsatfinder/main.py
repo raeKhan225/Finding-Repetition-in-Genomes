@@ -1,30 +1,18 @@
-import os
-import smtplib
 import subprocess
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import pymongo as pymongo
+import sys
 
-# Database
-from gridfs import GridFS
-
-client = pymongo.MongoClient('127.0.0.1', 27017)
-db = client["microsat_finder_jobs"]
-col = db["jobs"]
 scaffold_dict = {}
 
 
 # Read FASTA file
 def read_fasta_file(filecontent):
     # Split by > to get individual scaffolds
-    scaffolds = filecontent.split(">")  # Error with seq at the begining
+    scaffolds = filecontent.split(">")  # Error with seq at the beginning
 
     for scaffold in scaffolds:
         # If not empty
         if scaffold != '':
-            # Split scaffold by first instance on \n to get the scaffold name and value seperate
+            # Split scaffold by first instance on \n to get the scaffold name and value separate
             split_scaffold = scaffold.split("\n", 1)
 
             # Add to dictionary with actual sting and size and get rid of \t, \n and spaces
@@ -32,8 +20,6 @@ def read_fasta_file(filecontent):
             value = split_scaffold[1].replace('\n', '').replace('\t', '').strip()
 
             scaffold_dict[key] = value
-
-
 
 
 """
@@ -61,7 +47,7 @@ def createGFF(filename):
                 "##Microsatellite finder 2023 version 1\n" +
                 "##Author: Raeesah Khan\n")
         f.close()
-        print("Success")
+        print("Success, GFF file created")
 
     except Exception:
         print("Could not create file, file may already exists")
@@ -98,72 +84,29 @@ def findSequenceId(start, end):
             return key
 
 
-def sendEmail(email, message_content, f):
-    message = MIMEMultipart()
-    message['From'] = 'rak12@aber.ac.uk'
-    message['To'] = email
-    message['Subject'] = 'Completed Job microsatellite finder'
-
-    # The email has to be sent on the Aberystwyth University Network
-    smtp_conn = smtplib.SMTP('smtp.aber.ac.uk', 25)
-    smtp_conn.ehlo()
-    smtp_conn.starttls()
-
-    with open(f, 'rb') as attachment:
-        part = MIMEBase('application', 'octet-stream')
-        part.set_payload(attachment.read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition',
-                        'attachment', filename=f.split("/")[-1])
-        message.attach(part)
-
-    message.attach(MIMEText(message_content))
-
-    # Convert message to string and send
-    smtp_conn.sendmail('rak12@aber.ac.uk', email, message.as_string())
-
-    # Terminate SMTP session
-    smtp_conn.quit()
-
-
 if __name__ == "__main__":
-    # Order db from oldest to newest
-    sorted_db = col.find({}).sort('date')
+    # The program must be called with the FASTA file after the program name
+    filename = sys.argv[1]
+    file = open(filename, 'r')
+    filecontent = file.read()
 
-    # Get oldest job details
-    job = sorted_db[0]
-    minLenMicrosat = job.get('min_microsat_length')
-    minLenRepeats = job.get('min_Kmer_length')
-    maxLenRepeats = job.get('max_Kmer_length')
-    mismatchPerc = job.get('perc_mismatch')
-    projectTitle = job.get('project_title')
-    email = job.get('email')
-
-    # Read FASTA file from db
-    # Get file from job
-    fs = GridFS(db)
-
-    # Find the file's document by _id
-    file_id = job.get('fasta_file')
-    file_doc = db.fs.files.find_one({"_id": file_id})
-
-    # Retrieve the file's data by reading its chunks
-    chunks = db.fs.chunks.find({"files_id": file_id}).sort("n")
-    data = b"".join([chunk["data"] for chunk in chunks])
-
-    file_content = data.decode("utf-8")
-    read_fasta_file(file_content)
+    minLenMicrosat = input("Enter the minimum length of the microsatellite: ")
+    minLenRepeats = input("Enter the minimum length of the repeat: ")
+    maxLenRepeats = input("Enter the maximum length of the repeat: ")
+    mismatchPerc = input("Enter the mismatch percentage allowed: ")
+    projectTitle = input("Enter the project title: ")
 
     # Execute C++ program
-    command = '/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/hashTable'
+    command = './finding_microsat_perc_threshold_offline/cmake-build-debug/hashTable'
     # print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
 
     # Generate GFF3 File
     createGFF(projectTitle)
     microsats_start_stop_penalty_vals = ""
+
+    read_fasta_file(filecontent)
     # Go through sequence in dictionary
     for seqID, sequence in scaffold_dict.items():
-        print(sequence)
         proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         output_bytes, _ = proc.communicate(
             input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
@@ -191,12 +134,4 @@ if __name__ == "__main__":
                 features["score"] = vals[v + 2]
                 features["seqid"] = seqID
                 addtoGFF(projectTitle, features)
-
-    # Send email to user with their GFF3 file attached
-    sendEmail(email,
-              "Completed Job, please see attached file fo results of your job. Please Note you results are not saved",
-              projectTitle + ".gff3")
-
-    # Delete from database? Or flag as done on database
-    os.remove(projectTitle + ".gff3")
-    # remove job from database
+            print("Job complete")
