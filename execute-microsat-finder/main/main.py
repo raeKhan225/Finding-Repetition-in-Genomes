@@ -16,6 +16,10 @@ col = db["jobs"]
 scaffold_dict = {}
 
 
+def get_scaffold_dict():
+    return scaffold_dict
+
+
 # Read FASTA file
 def read_fasta_file(filecontent):
     # Split by > to get individual scaffolds
@@ -28,12 +32,10 @@ def read_fasta_file(filecontent):
             split_scaffold = scaffold.split("\n", 1)
 
             # Add to dictionary with actual sting and size and get rid of \t, \n and spaces
-            key = split_scaffold[0].replace('\n', '').replace('\t', '').strip()
-            value = split_scaffold[1].replace('\n', '').replace('\t', '').strip()
+            key = split_scaffold[0].replace('\n', '').replace('\t', '').replace('\r', '').strip()
+            value = split_scaffold[1].replace('\n', '').replace('\t', '').replace('\r', '').strip()
 
             scaffold_dict[key] = value
-
-
 
 
 """
@@ -89,7 +91,7 @@ def addtoGFF(filename, features):
         print("Cant read file or file does not exist")
 
 
-# Stat an end pos have to be 1 indexed
+# Start and end pos have to be 1 indexed
 def findSequenceId(start, end):
     counter = 0
     for key, vals in scaffold_dict.items():
@@ -132,6 +134,7 @@ if __name__ == "__main__":
 
     # Get oldest job details
     job = sorted_db[0]
+    document_id = job.get('_id')
     minLenMicrosat = job.get('min_microsat_length')
     minLenRepeats = job.get('min_Kmer_length')
     maxLenRepeats = job.get('max_Kmer_length')
@@ -163,7 +166,7 @@ if __name__ == "__main__":
     microsats_start_stop_penalty_vals = ""
     # Go through sequence in dictionary
     for seqID, sequence in scaffold_dict.items():
-        print(sequence)
+
         proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         output_bytes, _ = proc.communicate(
             input=f"{sequence} {minLenMicrosat} {minLenRepeats} {maxLenRepeats} {mismatchPerc}".encode())
@@ -197,6 +200,9 @@ if __name__ == "__main__":
               "Completed Job, please see attached file fo results of your job. Please Note you results are not saved",
               projectTitle + ".gff3")
 
-    # Delete from database? Or flag as done on database
+    # Remove file
     os.remove(projectTitle + ".gff3")
+
     # remove job from database
+    col.delete_one({"_id": document_id})
+    db.fs.files.delete_one({"_id": file_id})

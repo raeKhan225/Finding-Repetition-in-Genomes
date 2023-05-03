@@ -6,6 +6,7 @@
 
 
 
+
 class MicrosatFinder {
 public:
     /**
@@ -273,7 +274,6 @@ public:
 
 };
 
-//sequence, minLenMicrosat, minLenRepeats, maxLenRepeats,mismatchPerc
 int main() {
 
     std::string input;

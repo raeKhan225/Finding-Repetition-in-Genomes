@@ -87,7 +87,7 @@ public:
                 int lenThreshold = 0;
                 std::string microSat;
                 float noMismatches = 0;
-                penaltyScore =0;
+                penaltyScore = 0;
 
 
                 // while first and second repeats equals each other and the mismatch percentage hasn't been crossed

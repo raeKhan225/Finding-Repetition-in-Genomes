@@ -16,8 +16,8 @@ def read_fasta_file(filecontent):
             split_scaffold = scaffold.split("\n", 1)
 
             # Add to dictionary with actual sting and size and get rid of \t, \n and spaces
-            key = split_scaffold[0].replace('\n', '').replace('\t', '').strip()
-            value = split_scaffold[1].replace('\n', '').replace('\t', '').strip()
+            key = split_scaffold[0].replace('\n', '').replace('\t', '').replace('\r', '').strip()
+            value = split_scaffold[1].replace('\n', '').replace('\t', '').replace('\r', '').strip()
 
             scaffold_dict[key] = value
 
@@ -97,8 +97,8 @@ if __name__ == "__main__":
     projectTitle = input("Enter the project title: ")
 
     # Execute C++ program
-    command = './finding_microsat_perc_threshold_offline/cmake-build-debug/hashTable'
-    # print(minLenMicrosat, minLenRepeats, maxLenRepeats, mismatchPerc)
+    command = './offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug/hashTable'
+
 
     # Generate GFF3 File
     createGFF(projectTitle)
@@ -134,4 +134,4 @@ if __name__ == "__main__":
                 features["score"] = vals[v + 2]
                 features["seqid"] = seqID
                 addtoGFF(projectTitle, features)
-            print("Job complete")
+    print("Job complete")

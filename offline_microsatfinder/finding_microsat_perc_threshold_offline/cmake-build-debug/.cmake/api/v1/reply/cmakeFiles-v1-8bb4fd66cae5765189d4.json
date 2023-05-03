@@ -1143,8 +1143,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug",
-		"source" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold"
+		"build" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug",
+		"source" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline"
 	},
 	"version" : 
 	{

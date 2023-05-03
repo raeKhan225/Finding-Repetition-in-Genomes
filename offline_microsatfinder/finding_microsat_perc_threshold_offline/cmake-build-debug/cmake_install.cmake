@@ -1,4 +1,4 @@
-# Install script for directory: /Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold
+# Install script for directory: /Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

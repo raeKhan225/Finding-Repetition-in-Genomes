@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold -B/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug
+  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline -B/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

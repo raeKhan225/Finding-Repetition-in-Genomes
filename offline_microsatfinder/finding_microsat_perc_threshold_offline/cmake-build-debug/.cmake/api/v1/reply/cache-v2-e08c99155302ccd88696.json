@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug"
+			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -515,7 +515,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold"
+			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline"
 		},
 		{
 			"name" : "CMAKE_INSTALL_NAME_TOOL",
@@ -1087,7 +1087,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold/cmake-build-debug"
+			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline/cmake-build-debug"
 		},
 		{
 			"name" : "hashTable_IS_TOP_LEVEL",
@@ -1111,7 +1111,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/finding_microsat_perc_threshold"
+			"value" : "/Users/raeesahkhan/Documents/uni/Major_Project/offline_microsatfinder/finding_microsat_perc_threshold_offline"
 		}
 	],
 	"kind" : "cache",
