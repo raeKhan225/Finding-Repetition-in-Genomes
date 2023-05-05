@@ -187,3 +187,20 @@ Traceback (most recent call last):
   File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
     raise IndexError("no such item for Cursor instance")
 IndexError: no such item for Cursor instance
+Success
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 200, in <module>
+    sendEmail(email,
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 111, in sendEmail
+    smtp_conn = smtplib.SMTP('smtp.aber.ac.uk', 25)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtplib.py", line 341, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtplib.py", line 312, in _get_socket
+    return socket.create_connection((host, port), timeout,
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/socket.py", line 843, in create_connection
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/socket.py", line 831, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 60] Operation timed out

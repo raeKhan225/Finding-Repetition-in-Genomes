@@ -20,13 +20,7 @@
 
 <div class="container py-4">
     <h5>Upload FASTA File</h5>
-    <p class="font-weight-light "> Upload a FASTA file, the file formats that are accepted are .fa and .fast files.
-        Email description,
-        Project title description,
-        Min K-mer Length description,
-        Max K-mer Length description,
-        Min Microsat Length description,
-        Graph choice description
+    <p class="font-weight-light "> Upload a FASTA file and enter the values for the parameters below for your analysis to be run.
     </p>
 
     <!-- Form with all details needed for the analysis for uploading a job, the js has a listener for the submit-->
@@ -44,7 +38,7 @@
         </div>
 
         <div class="form-group">
-            <label for="minKmerLength">Min K-mer Length</label>
+            <label for="minKmerLength">Minimum repeat Length</label>
             <select id="minKmerLength" class="form-control" name="minKmerLength" required>
                 <option selected value="">Select size</option>
                 <option>2</option>
@@ -56,7 +50,7 @@
         </div>
 
         <div class="form-group">
-            <label for="maxKmerLength">Max K-mer Length</label>
+            <label for="maxKmerLength">Maximum repeat Length</label>
             <select id="maxKmerLength" class="form-control" name="maxKmerLength" required>
                 <option selected value="">Select size</option>
                 <option>2</option>
@@ -68,7 +62,7 @@
         </div>
 
         <div class="form-group">
-            <label for="minMicrosatLength">Min Microsat Length</label>
+            <label for="minMicrosatLength">Minimum microsatellite Length</label>
             <select id="minMicrosatLength" class="form-control" name="minMicrosatLength" required>
                 <option selected value="">Select size</option>
                 <option>3</option>

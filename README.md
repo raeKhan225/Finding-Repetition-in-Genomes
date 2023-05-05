@@ -16,5 +16,5 @@ commonly, Microsatellites are considered to be between 2 and 7 bases long. This 
 First download the offline\_microsatfinder folder and then you are able to run the offline finder with your FASTA file. 
 
 ```bash 
-python3 offline microsatfinder/main.py <FASTAfilepath>
+python3 offline_microsatfinder/main.py <FASTAfilepath>
 

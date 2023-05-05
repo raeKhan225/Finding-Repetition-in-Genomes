@@ -6,7 +6,7 @@
      xmlns="http://www.w3.org/1999/html">
 
     <!-- Hidden until current job pop up is submitted -->
-     <div id="showResponseArea_curr_jobs" class="alert" style="color:green" hidden>
+    <div id="showResponseArea_curr_jobs" class="alert" style="color:green" hidden>
         <span>
             <strong>Success! </strong>You should receive an email shortly with your current jobs.
         </span>
@@ -19,7 +19,8 @@
         because they can be used to advance our understanding of biological systems, genetic diversity, and evolutionary
         processes. Furthermore, microsatellites are also useful for identifying and tracking genetic changes in
         populations, including those that may be important for human health or that are associated with diseases. Most
-        commonly, Microsatellites are considered to be between 2 and 7 bases long.</p>
+        commonly, Microsatellites are considered to be between 2 and 7 bases long. You can upload a FASTA file by
+        clicking the button below and a job will be made for your analysis, after the job is complete an email will be sent to you with your results.</p>
 
     <!-- Buttons on home page -->
     <div class="button-box">
@@ -30,12 +31,13 @@
         </a>
 
         <!-- Current jobs button which opens the modal-->
-        <button type="button" onclick="current_jobs_func()" id="current-jobs-btn"class="btn btn-info btn-dark" style="background-color: black">
+        <button type="button" onclick="current_jobs_func()" id="current-jobs-btn" class="btn btn-info btn-dark"
+                style="background-color: black">
             View Current Jobs
         </button>
 
         <!-- Modal for current jobs -->
-        <div class="modal" style="block" id="current-jobs-modal" >
+        <div class="modal" style="block" id="current-jobs-modal">
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -50,10 +52,11 @@
                             jobs associated with the entered email address. </p>
 
                         <!-- Form for current job email -->
-                        <form  name="view_current_jobs" id="view_current_jobs" >
+                        <form name="view_current_jobs" id="view_current_jobs">
                             <div class="form-group">
-                                <input type="email" name="inputcurrjobsEmail" class="form-control" id="inputcurrjobsEmail"
-                                        placeholder="Enter email" required>
+                                <input type="email" name="inputcurrjobsEmail" class="form-control"
+                                       id="inputcurrjobsEmail"
+                                       placeholder="Enter email" required>
                             </div>
                             <input type="button" onclick="close_modal()" class="btn btn-secondary " value="close"/>
                             <input type="submit" class="btn btn-dark" value="Submit"/>
@@ -94,7 +97,7 @@
                 6.8MB
             </div>
             <div class="col-sm text-right">
-                29 April 2023
+                5th May 2023
             </div>
         </div>
     </div>
