@@ -32,7 +32,8 @@ def read_fasta_file(filecontent):
             split_scaffold = scaffold.split("\n", 1)
 
             # Add to dictionary with actual sting and size and get rid of \t, \n and spaces
-            key = split_scaffold[0].replace('\n', '').replace('\t', '').replace('\r', '').strip()
+            key_val = split_scaffold[0].split(' ')
+            key = key_val[0].replace('\n', '').replace('\t', '').replace('\r', '').strip()
             value = split_scaffold[1].replace('\n', '').replace('\t', '').replace('\r', '').strip()
 
             scaffold_dict[key] = value

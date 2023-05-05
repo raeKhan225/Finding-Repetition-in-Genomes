@@ -10,4 +10,11 @@ used to advance our understanding of biological systems, genetic diversity, and
 evolutionary processes. Furthermore, microsatellites are also useful for
 identifying and tracking genetic changes in populations, including those that may
 be important for human health or that are associated with diseases. Most
-commonly, Microsatellites are considered to be between 2 and 7 bases long.
+commonly, Microsatellites are considered to be between 2 and 7 bases long. This repo details the web application for finding microsatellites.
+
+## Using the offline version
+First download the offline\_microsatfinder folder and then you are able to run the offline finder with your FASTA file. 
+
+```bash 
+python3 offline microsatfinder/main.py <FASTAfilepath>
+

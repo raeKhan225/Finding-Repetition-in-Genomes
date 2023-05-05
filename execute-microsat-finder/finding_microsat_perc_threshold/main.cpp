@@ -58,8 +58,9 @@ public:
      * @param maxLenRepeats
      * This is the maximum length of the repeats in the microsatellite
      * @param minLenMicrosat
-     * This is the minimum length of repeats for the repeats to b considered a microsatellite
-     * For example if the minimum length is 3 of repeat ATG then ATGATG will not but considered as a Microsatlite but ATGATGATG will be.
+     * This is the minimum length of repeats for the repeats to be considered a microsatellite
+     * For example if the minimum length is 3 of repeat ATG then ATGATG will not but considered
+     * as a Microsatlite but ATGATGATG will be.
      */
 
 
@@ -159,9 +160,7 @@ public:
                 }
             }
         }
-        //printHashTable();
     }
-
 
     /**
      *

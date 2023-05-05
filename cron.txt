@@ -37,3 +37,153 @@ Traceback (most recent call last):
   File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
     raise IndexError("no such item for Cursor instance")
 IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 136, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 136, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 136, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 136, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 136, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
+Traceback (most recent call last):
+  File "/Users/raeesahkhan/Documents/uni/Major_Project/execute-microsat-finder/main/main.py", line 137, in <module>
+    job = sorted_db[0]
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pymongo/cursor.py", line 760, in __getitem__
+    raise IndexError("no such item for Cursor instance")
+IndexError: no such item for Cursor instance
